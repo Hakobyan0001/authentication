@@ -15,32 +15,52 @@ import {
   validatePassword,
   validateName,
 } from "../../../utils/validators";
+import { registerUser } from "../../../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Registration() {
-  const [errors, setErrors] = useState<any>({});
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data: { [key: string]: string } = {};
-    formData.forEach((value, key) => {
-      data[key] = value.toString();
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
+
+  function handleChange(e: { target: { name: any; value: any; }; }){
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
+  };
 
-    const newErrors: any = {};
-    newErrors.email = validateEmail(data.email);
-    newErrors.password = validatePassword(data.password);
-    newErrors.name = validateName(data.firstName, data.lastName);
+  // function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  //   event.preventDefault();
+  //   const formData = new FormData(event.currentTarget);
+  //   const data: { [key: string]: string } = {};
+  //   formData.forEach((value, key) => {
+  //     data[key] = value.toString();
+  //   });
 
-    setErrors(newErrors);
+  //   const newErrors: any = {};
+  //   newErrors.email = validateEmail(data.email);
+  //   newErrors.password = validatePassword(data.password);
+  //   newErrors.name = validateName(data.firstName, data.lastName);
 
-    if (Object.values(newErrors).some((error) => error !== null)) {
-      return;
-    }
+  //   setErrors(newErrors);
 
-    console.log("Form data:", data);
-  }
+  //   if (Object.values(newErrors).some((error) => error !== null)) {
+  //     return;
+  //   }
 
+  //   console.log("Form data:", data);
+  // }
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    dispatch(registerUser(formData));
+  };
   return (
     <Container component="main" maxWidth="xs">
       <Box
