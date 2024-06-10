@@ -8,35 +8,52 @@ import {
   Grid,
   Link,
   TextField,
-  Typography,
-} from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useState } from "react";
-import { validateEmail, validatePassword } from "../../../utils/validators";
+  Typography
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useState } from 'react';
+import { validateEmail, validatePassword } from '../../../utils/validators';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../redux/rootReducer';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [errors, setErrors] = useState<any>({});
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loading, error } = useSelector((state: RootState) => state.login);
+  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  function handleChange(e: { target: { name: any; value: any } }) {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data: { [key: string]: string } = {};
-    formData.forEach((value, key) => {
-      data[key] = value.toString();
-    });
 
-    const newErrors: any = {};
+    const { email, password } = formData;
 
-    newErrors.email = validateEmail(data.email);
-    newErrors.password = validatePassword(data.password);
+    const newErrors: {
+      email: string;
+      password: string;
+    } = {
+      email: validateEmail(email) || '',
+      password: validatePassword(password) || ''
+    };
 
     setErrors(newErrors);
-
-    if (Object.values(newErrors).some((error) => error !== null)) {
+    if (!Object.values(newErrors).every((val) => !val)) {
       return;
     }
-
-    console.log("Form data:", data);
+    console.log('Form data:', formData);
+    navigate('/');
   }
 
   return (
@@ -44,12 +61,11 @@ export default function Login() {
       <Box
         sx={{
           marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -66,6 +82,7 @@ export default function Login() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            onChange={handleChange}
             autoFocus
           />
           <TextField
@@ -79,19 +96,20 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            {loading ? 'Signing Up...' : 'Sign Up'}
           </Button>
+          {error && (
+            <Typography color="error" variant="body2" align="center">
+              {error}
+            </Typography>
+          )}
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

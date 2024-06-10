@@ -1,12 +1,11 @@
-// src/redux/slices/registerSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { registerUser } from '../thunks/register';
 
-interface RegisterState {
+type RegisterState = {
   loading: boolean;
   error: string | null;
   success: boolean;
-}
+};
 
 const initialState: RegisterState = {
   loading: false,
@@ -37,7 +36,7 @@ const registerSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload ? action.payload.message : 'Registration failed';
+        // state.error = action.payload && action.payload.message ? action.payload.message : 'Registration failed';
         state.success = false;
       });
   }

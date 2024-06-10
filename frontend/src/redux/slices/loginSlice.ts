@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { login } from '../thunks/login';
+import { loginUser } from '../thunks/login';
 
-interface LoginState {
+type LoginState = {
   user: { id: string; name: string; email: string } | null;
   loading: boolean;
   error: string | null;
-}
+};
 
 const initialState: LoginState = {
   user: null,
@@ -29,13 +29,13 @@ const loginSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        loginUser.fulfilled,
-        (state, action: PayloadAction<{ id: string; name: string; email: string }>) => {
-          state.loading = false;
-          state.user = action.payload;
-        }
-      )
+      // .addCase(
+      //   loginUser.fulfilled,
+      //   (state, action: PayloadAction<{ id: string; name: string; email: string }>) => {
+      //     state.loading = false;
+      //     state.user = action.payload;
+      //   }
+      // )
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Login failed';

@@ -1,23 +1,17 @@
 export function validateEmail(email: string): string | null {
-  if (!email) return "Email address is required";
-  if (!/\S+@\S+\.\S+/.test(email)) return "Invalid email address";
-  return null;
+  if (!email) return 'Email address is required';
+  if (!/\S+@\S+\.\S+/.test(email)) return 'Invalid email address';
+  return '';
 }
 
 export function validatePassword(password: string): string | null {
-  if (!password) return "Password is required";
+  if (!password) return 'Password is required';
   // Add additional password validation rules if needed
-  return null;
+  return '';
 }
 
-export function validateName(
-  firstName: string,
-  lastName: string
-): { firstName?: string; lastName?: string } {
-  const errors: { firstName?: string; lastName?: string } = {};
-
-  if (!firstName) errors.firstName = "First name is required";
-  if (!lastName) errors.lastName = "Last name is required";
-
-  return errors;
+export function validateFullName(fullName: string): string {
+  if (!fullName) return 'Full name is required';
+  // Additional validation logic if needed
+  return '';
 }

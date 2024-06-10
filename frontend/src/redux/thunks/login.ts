@@ -1,23 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-interface RegisterUserPayload {
+type LoginUserPayload = {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
-}
+};
 
-interface RegisterUserError {
+type LoginUserError = {
   message: string;
-}
+};
 
-export const login = createAsyncThunk<
-  RegisterUserPayload,
-  { name: string; email: string; password: string },
-  { rejectValue: RegisterUserError }
->('auth/registerUser', async (userData, { rejectWithValue }) => {
+export const loginUser = createAsyncThunk<
+  LoginUserPayload,
+  { email: string; password: string },
+  { rejectValue: LoginUserError }
+>('auth/loginUser', async (loginData, { rejectWithValue }) => {
   try {
-    const response = await axios.post('/api/register', userData);
+    const response = await axios.post('/api/login', loginData);
     return response.data;
   } catch (error: any) {
     return rejectWithValue({ message: error.response.data });
