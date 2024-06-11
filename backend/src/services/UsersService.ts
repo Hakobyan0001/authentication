@@ -4,23 +4,7 @@ import { isValidEmail } from '../utils/validators';
 const prisma = new PrismaClient();
 
 class UsersService {
-  async getList({ reqQuery, paginationParams }) {
-    const where = {
-      active: true,
-      OR: [
-        { full_name: { contains: reqQuery.search || '' } },
-        { role: { equals: reqQuery.role || '' } },
-        { email: { contains: reqQuery.search || '' } }
-      ]
-    };
-    const users = await prisma.user.findMany({
-      where,
-      ...paginationParams
-    });
-    return users;
-  }
-
-  async create(data) {
+  async create(data: { email: string; full_name: string; password: string }) {
     const { email } = data;
     const existingUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase() }
@@ -37,7 +21,7 @@ class UsersService {
     return newUser;
   }
 
-  async isInvalidEmail(email) {
+  async isInvalidEmail(email: string) {
     if (!isValidEmail(email)) {
       return { message: 'Invalid email', error: true };
     }

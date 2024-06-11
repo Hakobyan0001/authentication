@@ -1,9 +1,9 @@
 import { Response } from 'express';
 
-interface ErrorResponse {
+type ErrorResponse = {
   status: number;
   message: string;
-}
+};
 
 const setStatus = (res: Response, isError: boolean, data: ErrorResponse): void => {
   if (isError) {
