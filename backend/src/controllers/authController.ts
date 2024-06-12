@@ -8,28 +8,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const userService = new UsersService();
 
-type User = {
-  id: string;
-  full_name: string;
-  email: string;
-  password: string;
-};
-
 export const login = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const user = req.user as User;
-
-    if (!user || !user.id || !user.full_name || !user.email || !user.password) {
-      throw new Error('Invalid user object received from request');
-    }
-    const userDTO = toDTO(user);
-    res.json({ userDTO });
-  } catch (error) {
-    setStatus(res, true, {
-      status: statusCodes.ServerError,
-      message: 'Server error'
-    });
-  }
+  const user = toDTO(req.body);
+  res.json({ user });
 };
 
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -45,7 +26,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const validationError = await userService.isInvalidEmail(email);
     if (validationError) {
       return setStatus(res, true, {
-        status: 400,
+        status: statusCodes.BadRequestError,
         message: validationError.message
       });
     }
@@ -56,9 +37,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         password
       }
     });
-
     setStatus(res, false, {
-      status: 200,
+      status: statusCodes.Created,
       message: 'Your account has been created. Please login.'
     });
   } catch (error) {

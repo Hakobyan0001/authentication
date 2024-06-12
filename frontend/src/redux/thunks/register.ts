@@ -7,18 +7,17 @@ type RegisterUserPayload = {
   password: string;
 };
 
-type RegisterUserError = {
-  message: string;
-};
-
-export const registerUser = createAsyncThunk<
-  RegisterUserPayload,
-  { rejectValue: RegisterUserError }
->('auth/registerUser', async (userData, { rejectWithValue }) => {
-  try {
-    const response = await axios.post('/api/register', userData);
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue({ message: error.response.data });
+export const registerUser = createAsyncThunk(
+  'auth/register',
+  async (userData: RegisterUserPayload, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('http://localhost:8080/auth/register', userData);
+      return response.data;
+    } catch (error: any) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data);
+    }
   }
-});
+);

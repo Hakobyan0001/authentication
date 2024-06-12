@@ -16,6 +16,7 @@ import { validateEmail, validatePassword } from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
+import { setUser } from '../../../redux/slices/authSlice';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ export default function Login() {
       return;
     }
     console.log('Form data:', formData);
+    // dispatch(setUser(formData))
     navigate('/');
   }
 

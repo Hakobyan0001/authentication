@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Box, Avatar, Typography, Grid, TextField, Button, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,13 @@ export default function Registration() {
     email: '',
     password: ''
   });
+
+  useEffect(() => {
+    if (success) {
+      navigate('/login');
+      dispatch(resetRegisterState());
+    }
+  }, [success, navigate, dispatch]);
 
   function handleChange(e: { target: { name: any; value: any } }) {
     setFormData({
@@ -52,8 +59,7 @@ export default function Registration() {
       return;
     }
     console.log('Form data:', formData);
-    navigate('/login');
-    // dispatch(registerUser(formData));
+    dispatch(registerUser(formData));
   };
 
   return (

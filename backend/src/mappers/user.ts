@@ -18,7 +18,7 @@ export function toDTO(model: user): UserDTO {
  * Takes the data transfer object as an argument and clears all unnecessary properties from it
  */
 export function fromDTO(dto: UserDTO, type: 'create' | 'update'): Partial<user> {
-  const props: (keyof UserDTO)[] = ['email', 'id', 'full_name']; // Specify type explicitly
+  const props: (keyof UserDTO)[] = ['email', 'id', 'full_name'];
   if (type === 'create') {
     props.push('password' as keyof UserDTO);
   }
