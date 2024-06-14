@@ -11,23 +11,35 @@ import {
   Typography
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { validateEmail, validatePassword } from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
-import { setUser } from '../../../redux/slices/authSlice';
+import { AppDispatch } from '../../../redux/store';
+import { loginUser } from '../../../redux/thunks/loginThunk';
+
+type LoginUserPayload = {
+  email: string;
+  password: string;
+};
 
 export default function Login() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { loading, error } = useSelector((state: RootState) => state.login);
+  const { loading, error, success } = useSelector((state: RootState) => state.login);
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+
+  useEffect(() => {
+    if (success) {
+      navigate('/');
+    }
+  }, [success]);
 
   function handleChange(e: { target: { name: any; value: any } }) {
     setFormData({
@@ -36,26 +48,22 @@ export default function Login() {
     });
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: { preventDefault: () => void }) {
     event.preventDefault();
 
     const { email, password } = formData;
 
-    const newErrors: {
-      email: string;
-      password: string;
-    } = {
+    const newErrors: LoginUserPayload = {
       email: validateEmail(email) || '',
       password: validatePassword(password) || ''
     };
 
     setErrors(newErrors);
+
     if (!Object.values(newErrors).every((val) => !val)) {
       return;
     }
-    console.log('Form data:', formData);
-    // dispatch(setUser(formData))
-    navigate('/');
+    dispatch(loginUser(formData));
   }
 
   return (

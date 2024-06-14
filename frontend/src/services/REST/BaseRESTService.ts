@@ -1,8 +1,8 @@
-import axios from "axios";
-const baseApiUrl = "http://localhost:8080";
+import axios from 'axios';
+const baseApiUrl = 'http://localhost:8080';
 
 class BaseRESTService {
-  token = "";
+  token = '';
 
   setToken(token: string) {
     this.token = token;
@@ -14,8 +14,8 @@ class BaseRESTService {
 
   run(rout: string, options: any) {
     let headers = {
-      "Content-Type": "application/json",
-      Authorization: ""
+      'Content-Type': 'application/json',
+      Authorization: ''
     };
 
     if (options.headers) {
@@ -23,7 +23,7 @@ class BaseRESTService {
     }
 
     if (this.token) {
-      headers.Authorization = "Bearer " + this.token;
+      headers.Authorization = 'Bearer ' + this.token;
     }
 
     const config = {
@@ -31,7 +31,7 @@ class BaseRESTService {
       url: baseApiUrl + rout,
       data: options.data,
       headers,
-      params:""
+      params: ''
     };
 
     if (options.params) {
@@ -40,5 +40,5 @@ class BaseRESTService {
     return axios(config);
   }
 }
-
-export default new BaseRESTService();
+const base = new BaseRESTService();
+export default base;

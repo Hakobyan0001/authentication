@@ -1,10 +1,16 @@
 import { Button, Box, Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../redux/slices/loginSlice';
 
 export default function AppBarComponent() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogOut = () => {
+    dispatch(logout());
+  };
   return (
     <AppBar
       position="fixed"
@@ -20,7 +26,7 @@ export default function AppBarComponent() {
           }}>
           <Typography variant="h6">Home</Typography>
         </Box>
-        <Button onClick={() => navigate('/login')}>Sing out</Button>
+        <Button onClick={() => handleLogOut()}>Sing out</Button>
       </Toolbar>
     </AppBar>
   );

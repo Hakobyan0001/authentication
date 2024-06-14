@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Box, Avatar, Typography, Grid, TextField, Button, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../../redux/thunks/register';
+import { registerUser } from '../../../redux/thunks/registerThunk';
 import { resetRegisterState } from '../../../redux/slices/registerSlice';
 import { validateEmail, validatePassword, validateFullName } from '../../../utils/validators';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../../redux/store';
+
+type RegisterUserPayload = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
 export default function Registration() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error, success } = useSelector((state: RootState) => state.register);
 
@@ -43,11 +51,7 @@ export default function Registration() {
 
     const { fullName, email, password } = formData;
 
-    const newErrors: {
-      fullName: string;
-      email: string;
-      password: string;
-    } = {
+    const newErrors: RegisterUserPayload = {
       fullName: validateFullName(fullName) || '',
       email: validateEmail(email) || '',
       password: validatePassword(password) || ''

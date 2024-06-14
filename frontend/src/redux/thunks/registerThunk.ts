@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { registerRequest } from '../../services/REST/Register';
 
 type RegisterUserPayload = {
   fullName: string;
@@ -11,7 +11,7 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData: RegisterUserPayload, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:8080/auth/register', userData);
+      const response = await registerRequest(userData);
       return response.data;
     } catch (error: any) {
       if (!error.response) {

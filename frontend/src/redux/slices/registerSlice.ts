@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser } from '../thunks/register';
+import { registerUser } from '../thunks/registerThunk';
 
 type RegisterState = {
   loading: boolean;
@@ -27,8 +27,6 @@ const registerSlice = createSlice({
     builder
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
-        state.success = false;
       })
       .addCase(registerUser.fulfilled, (state) => {
         state.loading = false;

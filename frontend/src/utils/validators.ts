@@ -4,14 +4,13 @@ export function validateEmail(email: string): string | null {
   return '';
 }
 
-export function validatePassword(password: string): string | null {
+export function validatePassword(password: string) {
   if (!password) return 'Password is required';
-  // Add additional password validation rules if needed
+  if (password.length < 6) return 'Password must be at least 6 characters';
   return '';
 }
 
 export function validateFullName(fullName: string): string {
   if (!fullName) return 'Full name is required';
-  // Additional validation logic if needed
   return '';
 }

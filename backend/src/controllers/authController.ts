@@ -4,13 +4,16 @@ import UsersService from '../services/UsersService';
 import { toDTO } from '../mappers/user';
 import statusCodes from '../config/statusCodes';
 import { PrismaClient } from '@prisma/client';
+import generateToken from '../utils/generateToken';
 
 const prisma = new PrismaClient();
 const userService = new UsersService();
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   const user = toDTO(req.body);
-  res.json({ user });
+  const token = generateToken(user);
+  console.log(user);
+  res.json({ token, user });
 };
 
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -30,7 +33,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         message: validationError.message
       });
     }
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         full_name: fullName,
         email,
