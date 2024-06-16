@@ -4,23 +4,16 @@ import { isValidEmail } from '../utils/validators';
 const prisma = new PrismaClient();
 
 class UsersService {
-  async create(data: { email: string; full_name: string; password: string }) {
-    const { email } = data;
-    const existingUser = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
-    });
-    if (existingUser) {
-      throw new Error('User with such email already exists.');
-    }
-    const newUser = await prisma.user.create({
-      data: {
-        ...data,
-        email: email.toLowerCase()
+  async findUser(email: string, password: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        email,
+        password
       }
     });
-    return newUser;
-  }
 
+    return user;
+  }
   async isInvalidEmail(email: string) {
     if (!isValidEmail(email)) {
       return { message: 'Invalid email', error: true };

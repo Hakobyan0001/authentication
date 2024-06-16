@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../../redux/store';
 
 type RegisterUserPayload = {
-  fullName: string;
+  full_name: string;
   email: string;
   password: string;
 };
@@ -21,13 +21,13 @@ export default function Registration() {
   const { loading, error, success } = useSelector((state: RootState) => state.register);
 
   const [formData, setFormData] = useState({
-    fullName: '',
+    full_name: '',
     email: '',
     password: ''
   });
 
   const [errors, setErrors] = useState({
-    fullName: '',
+    full_name: '',
     email: '',
     password: ''
   });
@@ -49,10 +49,10 @@ export default function Registration() {
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    const { fullName, email, password } = formData;
+    const { full_name, email, password } = formData;
 
     const newErrors: RegisterUserPayload = {
-      fullName: validateFullName(fullName) || '',
+      full_name: validateFullName(full_name) || '',
       email: validateEmail(email) || '',
       password: validatePassword(password) || ''
     };
@@ -86,16 +86,16 @@ export default function Registration() {
             <Grid item xs={12}>
               <TextField
                 autoComplete="given-name"
-                name="fullName"
+                name="full_name"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="full_name"
+                label="full Name"
                 autoFocus
-                value={formData.fullName}
+                value={formData.full_name}
                 onChange={handleChange}
-                error={!!errors.fullName}
-                helperText={errors.fullName}
+                error={!!errors.full_name}
+                helperText={errors.full_name}
               />
             </Grid>
             <Grid item xs={12}>

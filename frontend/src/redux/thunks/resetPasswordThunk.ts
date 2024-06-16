@@ -1,17 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { registerRequest } from '../../services/REST/Register';
+import { resetPasswordRequest } from '../../services/REST/resetPassword';
 
-type RegisterUserPayload = {
+type resetPasswordUserPayload = {
   full_name: string;
   email: string;
-  password: string;
 };
 
 export const registerUser = createAsyncThunk(
-  'auth/register',
-  async (userData: RegisterUserPayload, { rejectWithValue }) => {
+  'auth/resetPassword',
+  async (userData: resetPasswordUserPayload, { rejectWithValue }) => {
     try {
-      const response = await registerRequest(userData);
+      const response = await resetPasswordRequest(userData);
       return response.data;
     } catch (error: any) {
       if (!error.response) {

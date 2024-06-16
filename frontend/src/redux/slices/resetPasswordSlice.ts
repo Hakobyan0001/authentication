@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { loginUser } from '../thunks/loginThunk';
-import storage from '../../services/storage';
-import base from '../../services/REST/BaseRESTService';
 
-type LoginState = {
+type ResetPasswordState = {
   user: userState | null;
   loading: boolean;
   success: boolean;
@@ -11,28 +9,20 @@ type LoginState = {
 };
 
 type userState = {
-  id: string;
-  full_name: string;
   email: string;
+  full_name: string;
 };
-const initialState: LoginState = {
+const initialState: ResetPasswordState = {
   user: null,
   loading: false,
   success: false,
   error: null
 };
 
-const loginSlice = createSlice({
-  name: 'login',
+const resetPasswordSlice = createSlice({
+  name: 'resetPassword',
   initialState,
-  reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.success = false;
-      storage.deleteUser('user');
-      base.setToken('');
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -47,11 +37,11 @@ const loginSlice = createSlice({
         state.loading = false;
         state.error = action.payload
           ? (action.payload as { message: string }).message
-          : 'Login failed';
+          : 'reset password is failed';
         state.success = false;
       });
   }
 });
 
-export const { logout } = loginSlice.actions;
-export default loginSlice.reducer;
+export const {} = resetPasswordSlice.actions;
+export default resetPasswordSlice.reducer;

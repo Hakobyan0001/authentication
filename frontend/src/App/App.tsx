@@ -5,7 +5,7 @@ import routes from '../routes';
 import { useSelector } from 'react-redux';
 
 function App() {
-  const login = useSelector((state: any) => state.login);
+  const {user} = useSelector((state: any) => state.login);
 
   return (
     <div className="App">
@@ -13,7 +13,7 @@ function App() {
       <Routes>
         {routes.map((route) =>
           route.private ? (
-            login.isLoggedIn ? (
+            user ? (
               <Route key={route.path} path={route.path} element={route.element} />
             ) : (
               <Route key={route.path} path={route.path} element={<Navigate to="/login" />} />

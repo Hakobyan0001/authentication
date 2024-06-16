@@ -10,10 +10,29 @@ const prisma = new PrismaClient();
 const userService = new UsersService();
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  const user = toDTO(req.body);
-  const token = generateToken(user);
-  console.log(user);
-  res.json({ token, user });
+  try {
+    const { email, password } = req.body;
+
+    const user = await userService.findUser(email, password);
+
+    if (!user) {
+      setStatus(res, true, {
+        status: statusCodes.NotFoundStatus,
+        message: 'User not found or password incorrect'
+      });
+      return;
+    }
+    const token = generateToken(user);
+    const userDTO = toDTO(user);
+
+    res.json({ token, ...userDTO });
+  } catch (error) {
+    console.error('Login error:', error);
+    setStatus(res, true, {
+      status: statusCodes.ServerError,
+      message: 'Server error'
+    });
+  }
 };
 
 export const register = async (req: Request, res: Response): Promise<void> => {

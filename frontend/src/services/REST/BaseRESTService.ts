@@ -37,7 +37,14 @@ class BaseRESTService {
     if (options.params) {
       config.params = options.params;
     }
-    return axios(config);
+    return axios(config)
+      .then((response) => response)
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          console.error('Unauthorized access - possibly invalid token');
+        }
+        throw error;
+      });
   }
 }
 const base = new BaseRESTService();

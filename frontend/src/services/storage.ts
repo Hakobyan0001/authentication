@@ -14,11 +14,11 @@ const clear = () => {
   localStorage.clear();
 };
 
-const storageUtils = {
+const storage = {
   addUser,
   deleteUser,
   getUser,
   clear
 };
 
-export default storageUtils;
+export default storage;

@@ -30,7 +30,7 @@ export default function Login() {
 
   const { loading, error, success } = useSelector((state: RootState) => state.login);
   const [errors, setErrors] = useState({ email: '', password: '' });
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginUserPayload>({
     email: '',
     password: ''
   });
@@ -39,7 +39,7 @@ export default function Login() {
     if (success) {
       navigate('/');
     }
-  }, [success]);
+  }, [success, navigate]);
 
   function handleChange(e: { target: { name: any; value: any } }) {
     setFormData({
@@ -66,6 +66,7 @@ export default function Login() {
     dispatch(loginUser(formData));
   }
 
+  function openModal() {}
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -122,9 +123,9 @@ export default function Login() {
           )}
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <TextField onClick={openModal()} variant="body2">
                 Forgot password?
-              </Link>
+              </TextField>
             </Grid>
             <Grid item>
               <Link href="./registration" variant="body2">

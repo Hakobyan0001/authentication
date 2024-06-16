@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { loginRequest } from '../../services/REST/Login';
-import storageUtils from '../../services/storage';
+import storage from '../../services/storage';
 import baseRESTService from '../../services/REST/BaseRESTService';
 
 type LoginUserPayload = {
@@ -14,7 +14,7 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await loginRequest(loginData);
       const user = JSON.stringify(response.data);
-      storageUtils.addUser('user', user);
+      storage.addUser('user', user);
       baseRESTService.setToken(response.data.token);
 
       return response.data;
