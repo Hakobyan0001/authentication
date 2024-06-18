@@ -2,11 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { resetPasswordRequest } from '../../services/REST/resetPassword';
 
 type resetPasswordUserPayload = {
-  full_name: string;
   email: string;
 };
 
-export const registerUser = createAsyncThunk(
+export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
   async (userData: resetPasswordUserPayload, { rejectWithValue }) => {
     try {

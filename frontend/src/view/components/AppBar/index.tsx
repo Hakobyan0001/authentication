@@ -21,14 +21,16 @@ export default function AppBarComponent() {
       sx={{
         backgroundColor: 'black',
         zIndex: 1300
-      }}>
+      }}
+    >
       <Toolbar>
         {user && (
           <>
             <Box
               sx={{
                 flexGrow: '1'
-              }}>
+              }}
+            >
               <Typography variant="h6">Home</Typography>
             </Box>
             <Button onClick={() => handleLogOut()}>Sing out</Button>{' '}

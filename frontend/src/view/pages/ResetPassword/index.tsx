@@ -1,43 +1,27 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Link,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useEffect, useState } from 'react';
-import { validateEmail, validatePassword } from '../../../utils/validators';
+import { validateEmail } from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AppDispatch } from '../../../redux/store';
-import { loginUser } from '../../../redux/thunks/loginThunk';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { resetPassword } from '../../../redux/thunks/resetPasswordThunk';
+import SetPassword from './SetPassword';
 
 type LoginUserPayload = {
   email: string;
-  password: string;
 };
 
-export default function Login() {
+export default function ResetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
-  const { loading, error, success } = useSelector((state: RootState) => state.login);
-  const [errors, setErrors] = useState({ email: '', password: '' });
+  const { loading, error, success } = useSelector((state: RootState) => state.resetPassword);
+  const [errors, setErrors] = useState({ email: '' });
   const [formData, setFormData] = useState<LoginUserPayload>({
-    email: '',
-    password: ''
+    email: ''
   });
-  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (success) {
       navigate('/');
@@ -54,11 +38,10 @@ export default function Login() {
   function handleSubmit(event: { preventDefault: () => void }) {
     event.preventDefault();
 
-    const { email, password } = formData;
+    const { email } = formData;
 
     const newErrors: LoginUserPayload = {
-      email: validateEmail(email) || '',
-      password: validatePassword(password) || ''
+      email: validateEmail(email) || ''
     };
 
     setErrors(newErrors);
@@ -66,7 +49,7 @@ export default function Login() {
     if (!Object.values(newErrors).every((val) => !val)) {
       return;
     }
-    dispatch(loginUser(formData));
+    dispatch(resetPassword(formData));
   }
 
   return (
@@ -77,12 +60,13 @@ export default function Login() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
-        }}>
+        }}
+      >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Reset Password
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -98,37 +82,8 @@ export default function Login() {
             onChange={handleChange}
             autoFocus
           />
-          <TextField
-            error={!!errors.password}
-            helperText={errors.password}
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            autoComplete="current-password"
-            onChange={handleChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            {loading ? 'Signing Up...' : 'Sign Up'}
+            {loading ? 'Submitting...' : 'Submit'}
           </Button>
           {error && (
             <Typography color="error" variant="body2" align="center">
@@ -137,8 +92,8 @@ export default function Login() {
           )}
           <Grid container>
             <Grid item xs>
-              <Link href={'./resetPassword'} variant="body2">
-                {'Forgot password?'}
+              <Link href={'./login'} variant="body2">
+                {'  go back'}
               </Link>
             </Grid>
             <Grid item>

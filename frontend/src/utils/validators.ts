@@ -10,6 +10,13 @@ export function validatePassword(password: string) {
   return '';
 }
 
+export function validateConfirmPassword(password: string, confirmPassword: string) {
+  if (!confirmPassword) return 'Confirm password is required';
+  if (confirmPassword.length < 6) return 'confirm Password must be at least 6 characters';
+  if (confirmPassword === password) return '';
+  return 'Password and Confirm Password must be same';
+}
+
 export function validateFullName(fullName: string): string {
   if (!fullName) return 'Full name is required';
   return '';

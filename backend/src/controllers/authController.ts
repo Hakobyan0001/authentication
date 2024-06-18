@@ -5,6 +5,7 @@ import { toDTO } from '../mappers/user';
 import statusCodes from '../config/statusCodes';
 import { PrismaClient } from '@prisma/client';
 import generateToken from '../utils/generateToken';
+import auth from '../config/auth';
 
 const prisma = new PrismaClient();
 const userService = new UsersService();
@@ -70,3 +71,83 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
+
+export async function resetPassword(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+
+    const user = await userService.findUser(email);
+
+    if (!user) {
+      setStatus(res, true, {
+        status: statusCodes.NotFoundStatus,
+        message: 'User not found'
+      });
+      return;
+    }
+    const token = generateToken({ id: user.id });
+    const expiresAt = new Date(Date.now() + parseInt(auth.tokenExpiration) * 1000);
+
+    await prisma.passwordResetToken.create({
+      data: {
+        token,
+        userId: user.id,
+        expiresAt
+      }
+    });
+
+    res.json({ token });
+  } catch (error) {
+    console.error('reset Password error:', error);
+    setStatus(res, true, {
+      status: statusCodes.ServerError,
+      message: 'Server error'
+    });
+  }
+}
+
+export async function setPassword(req: Request, res: Response) {
+  try {
+    const { token, password } = req.body;
+
+    // Find the password reset token in the database
+    const resetToken = await prisma.passwordResetToken.findFirst({
+      where: {
+        token: token,
+        expiresAt: {
+          gte: new Date() // Check if token is not expired
+        }
+      },
+      include: {
+        user: true
+      }
+    });
+
+    if (!resetToken) {
+      setStatus(res, true, {
+        status: statusCodes.NotFoundStatus,
+        message: 'Invalid or expired token'
+      });
+      return;
+    }
+
+    // Update the user's password
+    const isChanged = await userService.changePassword(resetToken.userId, password);
+
+    if (!isChanged) {
+      setStatus(res, true, {
+        status: statusCodes.ServerError,
+        message: 'Failed to update password'
+      });
+      return;
+    }
+
+    res.json(true);
+  } catch (error) {
+    console.error('Set Password error:', error);
+    setStatus(res, true, {
+      status: statusCodes.ServerError,
+      message: 'Server error'
+    });
+  }
+}

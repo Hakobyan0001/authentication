@@ -1,19 +1,15 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginUser } from '../thunks/loginThunk';
+import { createSlice } from '@reduxjs/toolkit';
+import { resetPassword } from '../thunks/resetPasswordThunk';
 
 type ResetPasswordState = {
-  user: userState | null;
+  token: string | null;
   loading: boolean;
   success: boolean;
   error: string | null;
 };
 
-type userState = {
-  email: string;
-  full_name: string;
-};
 const initialState: ResetPasswordState = {
-  user: null,
+  token: null,
   loading: false,
   success: false,
   error: null
@@ -25,15 +21,16 @@ const resetPasswordSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {
+      .addCase(resetPassword.pending, (state) => {
         state.loading = true;
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<userState>) => {
+      .addCase(resetPassword.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.user = action.payload;
+        state.token = action.payload;
+        console.log(state.token);
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload
           ? (action.payload as { message: string }).message

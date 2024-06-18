@@ -2,7 +2,7 @@ import base from './BaseRESTService';
 
 export const resetPasswordRequest = (data: any) => {
   return base.run('/auth/resetPassword', {
-    method: 'PATCH',
+    method: 'POST',
     data
   });
 };
