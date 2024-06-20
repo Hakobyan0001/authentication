@@ -1,35 +1,56 @@
 import { useEffect, useState } from 'react';
-import { Container, Box, Avatar, Typography, Grid, TextField, Button, Link } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Link,
+  TextField,
+  Typography
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { registerUser } from '../../../redux/thunks/registerThunk';
 import { resetRegisterState } from '../../../redux/slices/registerSlice';
-import { validateEmail, validatePassword, validateFullName } from '../../../utils/validators';
+import {
+  validateEmail,
+  validatePassword,
+  validateFullName,
+  validateConfirmPassword
+} from '../../../utils/validators';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../../redux/store';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 type RegisterUserPayload = {
   full_name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 export default function Registration() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error, success } = useSelector((state: RootState) => state.register);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
-
   const [errors, setErrors] = useState({
     full_name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
 
   useEffect(() => {
@@ -49,12 +70,13 @@ export default function Registration() {
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    const { full_name, email, password } = formData;
+    const { full_name, email, password, confirmPassword } = formData;
 
     const newErrors: RegisterUserPayload = {
       full_name: validateFullName(full_name) || '',
       email: validateEmail(email) || '',
-      password: validatePassword(password) || ''
+      password: validatePassword({ password, isNewPassword: true }) || '',
+      confirmPassword: validateConfirmPassword({ password, confirmPassword }) || ''
     };
 
     setErrors(newErrors);
@@ -74,8 +96,7 @@ export default function Registration() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
-        }}
-      >
+        }}>
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
@@ -86,12 +107,12 @@ export default function Registration() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="given-name"
+                autoComplete="full_name"
                 name="full_name"
                 required
                 fullWidth
                 id="full_name"
-                label="full Name"
+                label="Full Name"
                 autoFocus
                 value={formData.full_name}
                 onChange={handleChange}
@@ -115,18 +136,55 @@ export default function Registration() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={!!errors.password}
+                helperText={errors.password}
                 required
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 id="password"
-                autoComplete="new-password"
-                value={formData.password}
+                autoComplete="current-password"
                 onChange={handleChange}
-                error={!!errors.password}
-                helperText={errors.password}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
+                required
+                fullWidth
+                id="confirmPassword"
+                label="Confirm Password "
+                type={showConfirmPassword ? 'text' : 'password'}
+                name="confirmPassword"
+                autoComplete="new-password"
+                onChange={handleChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        edge="end">
+                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />{' '}
             </Grid>
           </Grid>
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

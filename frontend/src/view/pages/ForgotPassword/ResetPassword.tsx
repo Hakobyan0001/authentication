@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import { validateEmail } from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppDispatch } from '../../../redux/store';
 import { resetPassword } from '../../../redux/thunks/resetPasswordThunk';
-import SetPassword from './SetPassword';
 
 type LoginUserPayload = {
   email: string;
@@ -60,15 +59,14 @@ export default function ResetPassword() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
-        }}
-      >
+        }}>
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Reset Password
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '400px' }}>
           <TextField
             error={!!errors.email}
             helperText={errors.email}
@@ -93,7 +91,7 @@ export default function ResetPassword() {
           <Grid container>
             <Grid item xs>
               <Link href={'./login'} variant="body2">
-                {'  go back'}
+                {'Sign In'}
               </Link>
             </Grid>
             <Grid item>

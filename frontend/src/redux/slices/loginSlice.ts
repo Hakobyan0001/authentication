@@ -37,17 +37,17 @@ const loginSlice = createSlice({
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<userState>) => {
         state.loading = false;
         state.success = true;
         state.user = action.payload;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload
-          ? (action.payload as { message: string }).message
-          : 'Login failed';
+        state.error = (action.payload as { message: string }).message || 'Login failed';
         state.success = false;
       });
   }

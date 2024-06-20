@@ -25,6 +25,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 type LoginUserPayload = {
   email: string;
   password: string;
+  // isRememberMe?: boolean;
 };
 
 export default function Login() {
@@ -36,18 +37,22 @@ export default function Login() {
   const [formData, setFormData] = useState<LoginUserPayload>({
     email: '',
     password: ''
+    // isRememberMe: false
   });
   const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (success) {
       navigate('/');
     }
   }, [success, navigate]);
 
-  function handleChange(e: { target: { name: any; value: any } }) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value, type, checked } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     });
   }
 
@@ -58,7 +63,7 @@ export default function Login() {
 
     const newErrors: LoginUserPayload = {
       email: validateEmail(email) || '',
-      password: validatePassword(password) || ''
+      password: validatePassword({ password, isNewPassword: false }) || ''
     };
 
     setErrors(newErrors);
@@ -66,6 +71,7 @@ export default function Login() {
     if (!Object.values(newErrors).every((val) => !val)) {
       return;
     }
+
     dispatch(loginUser(formData));
   }
 
@@ -124,7 +130,14 @@ export default function Login() {
             }}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                //  value={formData.isRememberMe}
+                value="remember"
+                color="primary"
+                onChange={handleChange}
+              />
+            }
             label="Remember me"
           />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

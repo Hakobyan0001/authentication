@@ -4,11 +4,10 @@ import { isValidEmail } from '../utils/validators';
 const prisma = new PrismaClient();
 
 class UsersService {
-  async findUser(email: string, password?: string) {
+  async findUser(email: string) {
     const user = await prisma.user.findFirst({
       where: {
-        email,
-        password
+        email
       }
     });
 
@@ -18,7 +17,7 @@ class UsersService {
     if (!isValidEmail(email)) {
       return { message: 'Invalid email', error: true };
     }
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findFirst({
       where: { email }
     });
     if (existingUser) {
@@ -35,7 +34,6 @@ class UsersService {
       where: { userId }
     });
     return updatedUser ? true : false;
-
   }
   catch(error: string) {
     console.error('Change Password error:', error);

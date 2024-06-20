@@ -1,4 +1,15 @@
-import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Link,
+  TextField,
+  Typography
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useEffect, useState } from 'react';
 import { validateConfirmPassword, validatePassword } from '../../../utils/validators';
@@ -7,6 +18,7 @@ import { RootState } from '../../../redux/rootReducer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AppDispatch } from '../../../redux/store';
 import { setPassword } from '../../../redux/thunks/setPasswordThunk';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function SetPassword() {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,7 +30,8 @@ export default function SetPassword() {
     password: '',
     confirmPassword: ''
   });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   useEffect(() => {
     if (success) {
       navigate('/login');
@@ -38,8 +51,8 @@ export default function SetPassword() {
     const { password, confirmPassword } = formData;
 
     const newErrors = {
-      password: validatePassword(password) || '',
-      confirmPassword: validateConfirmPassword(password, confirmPassword) || ''
+      password: validatePassword({ password, isNewPassword: true }) || '',
+      confirmPassword: validateConfirmPassword({ password, confirmPassword }) || ''
     };
 
     setErrors(newErrors);
@@ -62,8 +75,7 @@ export default function SetPassword() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
-        }}
-      >
+        }}>
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
@@ -79,11 +91,23 @@ export default function SetPassword() {
             fullWidth
             name="password"
             label="Password "
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             autoComplete="new-password"
             onChange={handleChange}
             autoFocus
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
           <TextField
             error={!!errors.confirmPassword}
@@ -93,10 +117,22 @@ export default function SetPassword() {
             fullWidth
             id="confirmPassword"
             label="Confirm Password "
-            type="password"
+            type={showConfirmPassword ? 'text' : 'password'}
             name="confirmPassword"
             autoComplete="new-password"
             onChange={handleChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle confirm password visibility"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    edge="end">
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             {loading ? 'Submitting...' : 'Submit'}

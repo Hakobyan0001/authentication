@@ -6,23 +6,33 @@ import statusCodes from '../config/statusCodes';
 import { PrismaClient } from '@prisma/client';
 import generateToken from '../utils/generateToken';
 import auth from '../config/auth';
+import bcryptHelper from '../utils/bcrypt';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 const userService = new UsersService();
+const { hashPassword, comparePassword } = bcryptHelper();
 
 export const login = async (req: Request, res: Response): Promise<void> => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
-
-    const user = await userService.findUser(email, password);
+    const user = await userService.findUser(email);
 
     if (!user) {
-      setStatus(res, true, {
+      return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
-        message: 'User not found or password incorrect'
+        message: 'Invalid email or password'
       });
-      return;
     }
+    const isPasswordValid = comparePassword(password, user.password);
+
+    if (!isPasswordValid) {
+      return setStatus(res, true, {
+        status: statusCodes.NotFoundStatus,
+        message: 'Invalid email or password'
+      });
+    }
+
     const token = generateToken(user);
     const userDTO = toDTO(user);
 
@@ -37,9 +47,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const register = async (req: Request, res: Response): Promise<void> => {
-  const { email, password, fullName } = req.body;
+  const { email, password, full_name } = req.body;
 
-  if (!fullName || !email || !password || password.length < 6) {
+  if (!full_name || !email || !password || password.length < 6) {
     return setStatus(res, true, {
       status: statusCodes.BadRequestError,
       message: 'Bad Request. Please provide valid values for all fields.'
@@ -53,11 +63,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         message: validationError.message
       });
     }
+    const hashedPassword = hashPassword({ password });
+
     await prisma.user.create({
       data: {
-        full_name: fullName,
+        full_name: full_name,
         email,
-        password
+        password: hashedPassword
       }
     });
     setStatus(res, false, {
@@ -73,20 +85,18 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 };
 
 export async function resetPassword(req: Request, res: Response) {
+  const { email } = req.body;
   try {
-    const { email } = req.body;
-
     const user = await userService.findUser(email);
 
     if (!user) {
-      setStatus(res, true, {
+      return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
         message: 'User not found'
       });
-      return;
     }
-    const token = generateToken({ id: user.id });
-    const expiresAt = new Date(Date.now() + parseInt(auth.tokenExpiration) * 1000);
+    const token = crypto.randomBytes(20).toString('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
     await prisma.passwordResetToken.create({
       data: {
@@ -107,15 +117,13 @@ export async function resetPassword(req: Request, res: Response) {
 }
 
 export async function setPassword(req: Request, res: Response) {
+  const { token, password } = req.body;
   try {
-    const { token, password } = req.body;
-
-    // Find the password reset token in the database
     const resetToken = await prisma.passwordResetToken.findFirst({
       where: {
         token: token,
         expiresAt: {
-          gte: new Date() // Check if token is not expired
+          gte: new Date()
         }
       },
       include: {
@@ -133,7 +141,6 @@ export async function setPassword(req: Request, res: Response) {
 
     // Update the user's password
     const isChanged = await userService.changePassword(resetToken.userId, password);
-
     if (!isChanged) {
       setStatus(res, true, {
         status: statusCodes.ServerError,
