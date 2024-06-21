@@ -5,7 +5,7 @@ type ErrorResponse = {
   message: string;
 };
 
-const setStatus = (res: Response, isError: boolean, data: ErrorResponse): any => {
+function setStatus(res: Response, isError: boolean, data: ErrorResponse): any{
   const status = data.status || (isError ? 500 : 200);
   return res.status(status).json({ isError, ...data });
 };

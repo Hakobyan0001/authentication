@@ -5,7 +5,6 @@ import { toDTO } from '../mappers/user';
 import statusCodes from '../config/statusCodes';
 import { PrismaClient } from '@prisma/client';
 import generateToken from '../utils/generateToken';
-import auth from '../config/auth';
 import bcryptHelper from '../utils/bcrypt';
 import crypto from 'crypto';
 
@@ -13,7 +12,7 @@ const prisma = new PrismaClient();
 const userService = new UsersService();
 const { hashPassword, comparePassword } = bcryptHelper();
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+export async function login(req: Request, res: Response): Promise<void> {
   const { email, password } = req.body;
   try {
     const user = await userService.findUser(email);
@@ -44,9 +43,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       message: 'Server error'
     });
   }
-};
+}
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export async function register(req: Request, res: Response): Promise<void> {
   const { email, password, full_name } = req.body;
 
   if (!full_name || !email || !password || password.length < 6) {
@@ -82,7 +81,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       message: 'Server error'
     });
   }
-};
+}
 
 export async function resetPassword(req: Request, res: Response) {
   const { email } = req.body;
@@ -139,8 +138,8 @@ export async function setPassword(req: Request, res: Response) {
       return;
     }
 
-    // Update the user's password
     const isChanged = await userService.changePassword(resetToken.userId, password);
+
     if (!isChanged) {
       setStatus(res, true, {
         status: statusCodes.ServerError,
