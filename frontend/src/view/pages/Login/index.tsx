@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useEffect, useState } from 'react';
-import { validateEmail, validatePassword } from '../../../utils/validators';
+import Validator from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
@@ -23,8 +23,8 @@ import { loginUser } from '../../../redux/thunks/loginThunk';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 type LoginUserPayload = {
-  email: string;
-  password: string;
+  emailError: string;
+  passwordError: string;
   // isRememberMe?: boolean;
 };
 
@@ -33,8 +33,8 @@ export default function Login() {
   const navigate = useNavigate();
 
   const { loading, error, success } = useSelector((state: RootState) => state.login);
-  const [errors, setErrors] = useState({ email: '', password: '' });
-  const [formData, setFormData] = useState<LoginUserPayload>({
+  const [errors, setErrors] = useState({ emailError: '', passwordError: '' });
+  const [formData, setFormData] = useState({
     email: '',
     password: ''
     // isRememberMe: false
@@ -59,12 +59,7 @@ export default function Login() {
   function handleSubmit(event: { preventDefault: () => void }) {
     event.preventDefault();
 
-    const { email, password } = formData;
-
-    const newErrors: LoginUserPayload = {
-      email: validateEmail(email) || '',
-      password: validatePassword({ password, isNewPassword: false }) || ''
-    };
+    const newErrors: LoginUserPayload = Validator.validate(formData);
 
     setErrors(newErrors);
 
@@ -92,8 +87,8 @@ export default function Login() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
-            error={!!errors.email}
-            helperText={errors.email}
+            error={!!errors.emailError}
+            helperText={errors.emailError}
             margin="normal"
             required
             fullWidth
@@ -105,8 +100,8 @@ export default function Login() {
             autoFocus
           />
           <TextField
-            error={!!errors.password}
-            helperText={errors.password}
+            error={!!errors.passwordError}
+            helperText={errors.passwordError}
             margin="normal"
             required
             fullWidth

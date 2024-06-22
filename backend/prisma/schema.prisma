@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id                 String               @id @default(uuid())
-  full_name          String
+  fullName           String
   email              String               @unique
   password           String
   passwordResetToken PasswordResetToken[] @relation("UserTokens")

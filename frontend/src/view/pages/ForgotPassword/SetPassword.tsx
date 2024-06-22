@@ -12,20 +12,20 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useEffect, useState } from 'react';
-import { validateConfirmPassword, validatePassword } from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AppDispatch } from '../../../redux/store';
 import { setPassword } from '../../../redux/thunks/setPasswordThunk';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Validator from '../../../utils/validators';
 
 export default function SetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
   const { loading, error, success } = useSelector((state: RootState) => state.setPassword);
-  const [errors, setErrors] = useState({ password: '', confirmPassword: '' });
+  const [errors, setErrors] = useState({ passwordError: '', confirmPasswordError: '' });
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: ''
@@ -48,12 +48,7 @@ export default function SetPassword() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    const { password, confirmPassword } = formData;
-
-    const newErrors = {
-      password: validatePassword({ password, isNewPassword: true }) || '',
-      confirmPassword: validateConfirmPassword({ password, confirmPassword }) || ''
-    };
+    const newErrors = Validator.validate(formData);
 
     setErrors(newErrors);
 
@@ -64,7 +59,7 @@ export default function SetPassword() {
       console.error('Token is undefined or null.');
       return;
     }
-    dispatch(setPassword({ token, password }));
+    dispatch(setPassword({ token, password: formData.password }));
   }
 
   return (
@@ -84,8 +79,8 @@ export default function SetPassword() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
-            error={!!errors.password}
-            helperText={errors.password}
+            error={!!errors.passwordError}
+            helperText={errors.passwordError}
             margin="normal"
             required
             fullWidth
@@ -110,8 +105,8 @@ export default function SetPassword() {
             }}
           />
           <TextField
-            error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword}
+            error={!!errors.confirmPasswordError}
+            helperText={errors.confirmPasswordError}
             margin="normal"
             required
             fullWidth

@@ -8,7 +8,7 @@ import assignByProps from '../utils/assignByProps';
 export function toDTO(model: User): UserDTO {
   return {
     email: model.email.toLowerCase(),
-    full_name: model.full_name
+    fullName: model.fullName
   };
 }
 
@@ -17,13 +17,13 @@ export function toDTO(model: User): UserDTO {
  * Takes the data transfer object as an argument and clears all unnecessary properties from it
  */
 export function fromDTO(dto: UserDTO): Partial<User> {
-  const props: (keyof UserDTO)[] = ['email', 'id', 'full_name', 'password'];
+  const props: (keyof UserDTO)[] = ['email', 'id', 'fullName', 'password'];
   return assignByProps(dto, props);
 }
 
 type UserDTO = {
   id?: string;
   email: string;
-  full_name: string;
+  fullName: string;
   password?: string;
 };

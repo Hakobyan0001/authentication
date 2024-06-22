@@ -46,9 +46,9 @@ export async function login(req: Request, res: Response): Promise<void> {
 }
 
 export async function register(req: Request, res: Response): Promise<void> {
-  const { email, password, full_name } = req.body;
+  const { email, password, fullName } = req.body;
 
-  if (!full_name || !email || !password || password.length < 6) {
+  if (!fullName || !email || !password || password.length < 6) {
     return setStatus(res, true, {
       status: statusCodes.BadRequestError,
       message: 'Bad Request. Please provide valid values for all fields.'
@@ -66,7 +66,7 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     await prisma.user.create({
       data: {
-        full_name: full_name,
+        fullName: fullName,
         email,
         password: hashedPassword
       }

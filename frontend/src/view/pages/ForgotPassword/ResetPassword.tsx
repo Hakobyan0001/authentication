@@ -1,23 +1,19 @@
 import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useEffect, useState } from 'react';
-import { validateEmail } from '../../../utils/validators';
+import Validator from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch } from '../../../redux/store';
 import { resetPassword } from '../../../redux/thunks/resetPasswordThunk';
 
-type LoginUserPayload = {
-  email: string;
-};
-
 export default function ResetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error, success } = useSelector((state: RootState) => state.resetPassword);
-  const [errors, setErrors] = useState({ email: '' });
-  const [formData, setFormData] = useState<LoginUserPayload>({
+  const [errors, setErrors] = useState({ emailError: '' });
+  const [formData, setFormData] = useState({
     email: ''
   });
 
@@ -37,11 +33,7 @@ export default function ResetPassword() {
   function handleSubmit(event: { preventDefault: () => void }) {
     event.preventDefault();
 
-    const { email } = formData;
-
-    const newErrors: LoginUserPayload = {
-      email: validateEmail(email) || ''
-    };
+    const newErrors = Validator.validate(formData);
 
     setErrors(newErrors);
 
@@ -68,8 +60,8 @@ export default function ResetPassword() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '400px' }}>
           <TextField
-            error={!!errors.email}
-            helperText={errors.email}
+            error={!!errors.emailError}
+            helperText={errors.emailError}
             margin="normal"
             required
             fullWidth

@@ -14,12 +14,7 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { registerUser } from '../../../redux/thunks/registerThunk';
 import { resetRegisterState } from '../../../redux/slices/registerSlice';
-import {
-  validateEmail,
-  validatePassword,
-  validateFullName,
-  validateConfirmPassword
-} from '../../../utils/validators';
+import Validator from '../../../utils/validators';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,10 +22,10 @@ import { AppDispatch } from '../../../redux/store';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 type RegisterUserPayload = {
-  full_name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
+  fullNameError: string;
+  passwordError: string;
+  confirmPasswordError: string;
+  emailError: string;
 };
 
 export default function Registration() {
@@ -41,16 +36,16 @@ export default function Registration() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    full_name: '',
+    fullName: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
   const [errors, setErrors] = useState({
-    full_name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    fullNameError: '',
+    passwordError: '',
+    confirmPasswordError: '',
+    emailError: ''
   });
 
   useEffect(() => {
@@ -60,33 +55,25 @@ export default function Registration() {
     }
   }, [success, navigate, dispatch]);
 
-  function handleChange(e: { target: { name: any; value: any } }) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   }
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
 
-    const { full_name, email, password, confirmPassword } = formData;
-
-    const newErrors: RegisterUserPayload = {
-      full_name: validateFullName(full_name) || '',
-      email: validateEmail(email) || '',
-      password: validatePassword({ password, isNewPassword: true }) || '',
-      confirmPassword: validateConfirmPassword({ password, confirmPassword }) || ''
-    };
+    const newErrors: RegisterUserPayload = Validator.validate(formData);
 
     setErrors(newErrors);
 
     if (!Object.values(newErrors).every((val) => !val)) {
       return;
     }
-    console.log('Form data:', formData);
     dispatch(registerUser(formData));
-  };
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -107,17 +94,17 @@ export default function Registration() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="full_name"
-                name="full_name"
+                autoComplete="fullName"
+                name="fullName"
                 required
                 fullWidth
-                id="full_name"
+                id="fullName"
                 label="Full Name"
                 autoFocus
-                value={formData.full_name}
+                value={formData.fullName}
                 onChange={handleChange}
-                error={!!errors.full_name}
-                helperText={errors.full_name}
+                error={!!errors.fullNameError}
+                helperText={errors.fullNameError}
               />
             </Grid>
             <Grid item xs={12}>
@@ -130,14 +117,14 @@ export default function Registration() {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
-                error={!!errors.email}
-                helperText={errors.email}
+                error={!!errors.emailError}
+                helperText={errors.emailError}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!!errors.password}
-                helperText={errors.password}
+                error={!!errors.passwordError}
+                helperText={errors.passwordError}
                 required
                 fullWidth
                 name="password"
@@ -162,8 +149,8 @@ export default function Registration() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword}
+                error={!!errors.confirmPasswordError}
+                helperText={errors.confirmPasswordError}
                 required
                 fullWidth
                 id="confirmPassword"

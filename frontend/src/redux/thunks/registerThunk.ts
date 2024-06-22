@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { registerRequest } from '../../services/REST/Register';
 
 type RegisterUserPayload = {
-  full_name: string;
+  fullName: string;
   email: string;
   password: string;
 };
