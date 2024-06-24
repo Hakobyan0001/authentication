@@ -1,55 +1,59 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Link,
-  TextField,
-  Typography
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Box, Container, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppDispatch } from '../../../redux/store';
 import { setPassword } from '../../../redux/thunks/setPasswordThunk';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import Validator from '../../../utils/validators';
+import SetValidator from '../../../utils/validators/SetValidator';
+import {
+  setPasswordFormFields,
+  setPasswordFormHeader,
+  setPasswordFormLinks
+} from '../../../config/setPassword';
+import { AuthHeader, TextFieldMapper, AuthFormActions } from '../../components';
+import StyledComponents from '../../Styles';
+
+type setPasswordUserPayload = {
+  newPasswordError: string;
+  confirmNewPasswordError: string;
+};
+type FormData = {
+  newPassword: string;
+  confirmNewPassword: string;
+  [key: string]: string;
+};
+
+const { StyledBox } = StyledComponents;
 
 export default function SetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
   const { loading, error, success } = useSelector((state: RootState) => state.setPassword);
-  const [errors, setErrors] = useState({ passwordError: '', confirmPasswordError: '' });
-  const [formData, setFormData] = useState({
-    password: '',
-    confirmPassword: ''
+  const [errors, setErrors] = useState({ newPasswordError: '', confirmNewPasswordError: '' });
+  const [formData, setFormData] = useState<FormData>({
+    newPassword: '',
+    confirmNewPassword: ''
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   useEffect(() => {
     if (success) {
       navigate('/login');
     }
   }, [success, navigate]);
 
-  function handleChange(e: { target: { name: any; value: String } }) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   }
 
-  function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-
-    const newErrors = Validator.validate(formData);
-
+  function handleSubmit(e: { preventDefault: () => void }) {
+    e.preventDefault();
+    const newErrors = SetValidator(formData);
     setErrors(newErrors);
 
     if (!Object.values(newErrors).every((val) => !val)) {
@@ -59,98 +63,50 @@ export default function SetPassword() {
       console.error('Token is undefined or null.');
       return;
     }
-    dispatch(setPassword({ token, password: formData.password }));
+    dispatch(setPassword({ token, password: formData.newPassword }));
   }
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Set Password
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            error={!!errors.passwordError}
-            helperText={errors.passwordError}
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password "
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            autoComplete="new-password"
-            onChange={handleChange}
-            autoFocus
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-          <TextField
-            error={!!errors.confirmPasswordError}
-            helperText={errors.confirmPasswordError}
-            margin="normal"
-            required
-            fullWidth
-            id="confirmPassword"
-            label="Confirm Password "
-            type={showConfirmPassword ? 'text' : 'password'}
-            name="confirmPassword"
-            autoComplete="new-password"
-            onChange={handleChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle confirm password visibility"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    edge="end">
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            {loading ? 'Submitting...' : 'Submit'}
-          </Button>
-          {error && (
-            <Typography color="error" variant="body2" align="center">
-              {error}
-            </Typography>
-          )}
-          <Grid container>
-            <Grid item xs>
-              <Link href={'/login'} variant="body2">
-                {'Sign In'}
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/registration" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
+      <StyledBox>
+        <AuthHeader title={setPasswordFormHeader.title} />
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            {setPasswordFormFields.map((field, index) => (
+              <TextFieldMapper
+                key={field.name}
+                name={field.name}
+                label={field.label}
+                autoFocus={index === 0}
+                errorName={errors[`${field.name}Error` as keyof setPasswordUserPayload]}
+                handleChange={handleChange}
+                value={formData[field.name]}
+                type={
+                  (field.name === 'newPassword' && !showNewPassword) ||
+                  (field.name === 'confirmNewPassword' && !showConfirmNewPassword)
+                    ? 'password'
+                    : 'text'
+                }
+                setShowValue={
+                  field.name === 'newPassword'
+                    ? setShowNewPassword
+                    : field.name === 'confirmNewPassword'
+                      ? setShowConfirmNewPassword
+                      : undefined
+                }
+                showValue={
+                  field.name === 'newPassword'
+                    ? showNewPassword
+                    : field.name === 'confirmNewPassword'
+                      ? showConfirmNewPassword
+                      : undefined
+                }
+              />
+            ))}
           </Grid>
+          <AuthFormActions loading={loading} error={error} formLinks={setPasswordFormLinks} />
         </Box>
-      </Box>
+      </StyledBox>
     </Container>
   );
 }

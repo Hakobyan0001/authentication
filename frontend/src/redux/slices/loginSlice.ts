@@ -12,7 +12,7 @@ type LoginState = {
 
 type userState = {
   id: string;
-  full_name: string;
+  fullName: string;
   email: string;
 };
 const initialState: LoginState = {

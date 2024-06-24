@@ -1,19 +1,35 @@
-import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Box, Container, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
-import Validator from '../../../utils/validators';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch } from '../../../redux/store';
 import { resetPassword } from '../../../redux/thunks/resetPasswordThunk';
+import ResetValidator from '../../../utils/validators/ResetValidator';
+import {
+  resetPasswordFormFields,
+  resetPasswordFormHeader,
+  resetPasswordFormLinks
+} from '../../../config/resetPassword';
+import { AuthHeader, TextFieldMapper, AuthFormActions } from '../../components';
+import StyledComponents from '../../Styles';
+
+type ResetPasswordUserPayload = {
+  emailError: string;
+};
+type FormData = {
+  email: string;
+  [key: string]: string;
+};
+
+const { StyledBox } = StyledComponents;
 
 export default function ResetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error, success } = useSelector((state: RootState) => state.resetPassword);
   const [errors, setErrors] = useState({ emailError: '' });
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: ''
   });
 
@@ -23,7 +39,7 @@ export default function ResetPassword() {
     }
   }, [success, navigate]);
 
-  function handleChange(e: { target: { name: any; value: any } }) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -32,9 +48,7 @@ export default function ResetPassword() {
 
   function handleSubmit(event: { preventDefault: () => void }) {
     event.preventDefault();
-
-    const newErrors = Validator.validate(formData);
-
+    const newErrors: ResetPasswordUserPayload = ResetValidator(formData);
     setErrors(newErrors);
 
     if (!Object.values(newErrors).every((val) => !val)) {
@@ -45,55 +59,26 @@ export default function ResetPassword() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Reset Password
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '400px' }}>
-          <TextField
-            error={!!errors.emailError}
-            helperText={errors.emailError}
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            onChange={handleChange}
-            autoFocus
-          />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            {loading ? 'Submitting...' : 'Submit'}
-          </Button>
-          {error && (
-            <Typography color="error" variant="body2" align="center">
-              {error}
-            </Typography>
-          )}
-          <Grid container>
-            <Grid item xs>
-              <Link href={'./login'} variant="body2">
-                {'Sign In'}
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="./registration" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
+      <StyledBox>
+        <AuthHeader title={resetPasswordFormHeader.title} />
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '400px' }}>
+          <Grid container spacing={2}>
+            {resetPasswordFormFields.map((field, index) => (
+              <TextFieldMapper
+                key={field.name}
+                name={field.name}
+                label={field.label}
+                autoFocus={index === 0}
+                errorName={errors[`${field.name}Error` as keyof ResetPasswordUserPayload]}
+                handleChange={handleChange}
+                value={formData[field.name]}
+                type={'text'}
+              />
+            ))}
           </Grid>
+          <AuthFormActions loading={loading} error={error} formLinks={resetPasswordFormLinks} />
         </Box>
-      </Box>
+      </StyledBox>
     </Container>
   );
 }

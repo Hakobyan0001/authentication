@@ -6,7 +6,7 @@ export default function Home() {
   return (
     user && (
       <div style={{ margin: '200px' }}>
-        name: {user.full_name},<br></br> email: {user.email}
+        name: {user.fullName},<br></br> email: {user.email}
       </div>
     )
   );

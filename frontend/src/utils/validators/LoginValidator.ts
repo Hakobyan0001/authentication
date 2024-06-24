@@ -1,27 +1,19 @@
+import { validateEmail, validatePassword } from './validatorUtils';
+
 type LoginFormTypes = {
   password: string;
   email: string;
 };
+type ValidationErrorType = {
+  emailError: string;
+  passwordError: string;
+};
 
-class LoginValidator {
-  static validate(formData: LoginFormTypes) {
-    const passwordError = this.validatePassword(formData.password);
-    const emailError = this.validateEmail(formData.email);
+function LoginValidator(formData: LoginFormTypes): ValidationErrorType {
+  const passwordError = validatePassword(formData.password);
+  const emailError = validateEmail(formData.email);
 
-    return { passwordError, emailError };
-  }
-
-  static validateEmail(email: string): string {
-    if (!email) return 'Email address is required';
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return 'Invalid email address';
-    return '';
-  }
-  static validatePassword(password: string): string {
-    if (!password) return 'Password is required';
-    if (password.length < 6) return 'Password must be at least 6 characters long';
-    return '';
-  }
+  return { passwordError, emailError };
 }
 
 export default LoginValidator;

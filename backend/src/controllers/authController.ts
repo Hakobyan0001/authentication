@@ -46,7 +46,7 @@ export async function login(req: Request, res: Response): Promise<void> {
 }
 
 export async function register(req: Request, res: Response): Promise<void> {
-  const { email, password, fullName } = req.body;
+  const { email, newPassword: password, fullName } = req.body;
 
   if (!fullName || !email || !password || password.length < 6) {
     return setStatus(res, true, {

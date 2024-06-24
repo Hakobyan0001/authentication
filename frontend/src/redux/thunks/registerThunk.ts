@@ -4,7 +4,7 @@ import { registerRequest } from '../../services/REST/Register';
 type RegisterUserPayload = {
   fullName: string;
   email: string;
-  password: string;
+  newPassword: string;
 };
 
 export const registerUser = createAsyncThunk(
