@@ -1,17 +1,22 @@
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import Layout from './Layout';
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+
 import store from './redux/store';
+import Layout from './Layout';
+import reportWebVitals from './reportWebVitals';
+
+import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <Layout />
+        <CookiesProvider>
+          <Layout />
+        </CookiesProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

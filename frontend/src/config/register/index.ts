@@ -1,5 +1,5 @@
+import registerFormFields from './registerFormFields';
 import registerFormHeader from './registerFormHeader';
 import registerFormLinks from './registerFormLinks';
-import registerFormFields from './registerFormFields';
 
-export { registerFormHeader, registerFormLinks, registerFormFields };
+export { registerFormFields, registerFormHeader, registerFormLinks };

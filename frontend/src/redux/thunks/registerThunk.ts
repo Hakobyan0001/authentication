@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import { registerRequest } from '../../services/REST/Register';
 
 type RegisterUserPayload = {

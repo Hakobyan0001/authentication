@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
-import { Box, Container, Grid } from '@mui/material';
-import { registerUser } from '../../../redux/thunks/registerThunk';
-import { resetRegisterState } from '../../../redux/slices/registerSlice';
-import { RootState } from '../../../redux/rootReducer';
-import { useNavigate } from 'react-router-dom';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../../redux/store';
-import RegisterValidator from '../../../utils/validators/RegisterValidator';
-import { TextFieldMapper, AuthFormActions, AuthHeader } from '../../components';
-import StyledComponents from '../../Styles';
+import { useNavigate } from 'react-router-dom';
+
+import { Box, Container, Grid } from '@mui/material';
+
 import {
-  registerFormLinks,
+  registerFormFields,
   registerFormHeader,
-  registerFormFields
+  registerFormLinks
 } from '../../../config/register';
+import { RootState } from '../../../redux/rootReducer';
+import { resetRegisterState } from '../../../redux/slices/registerSlice';
+import { AppDispatch } from '../../../redux/store';
+import { registerUser } from '../../../redux/thunks/registerThunk';
+import RegisterValidator from '../../../utils/validators/RegisterValidator';
+import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
+import StyledComponents from '../../Styles';
 
 type RegisterUserPayload = {
   fullNameError: string;
@@ -58,14 +60,15 @@ export default function Registration() {
     }
   }, [success, navigate, dispatch]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
   }
 
-  function handleSubmit(e: { preventDefault: () => void }) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const newErrors: RegisterUserPayload = RegisterValidator(formData);
     setErrors(newErrors);

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { loginUser } from '../thunks/loginThunk';
-import storage from '../../services/storage';
-import base from '../../services/REST/BaseRESTService';
 
 type LoginState = {
   user: userState | null;
@@ -29,8 +28,6 @@ const loginSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.success = false;
-      storage.deleteUser('user');
-      base.setToken('');
     }
   },
   extraReducers: (builder) => {

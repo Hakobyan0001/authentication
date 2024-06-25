@@ -1,7 +1,7 @@
+import { ResetPassword, SetPassword } from '../view/pages/ForgotPassword';
+import Home from '../view/pages/Home';
 import Login from '../view/pages/Login';
 import Registration from '../view/pages/Registration';
-import Home from '../view/pages/Home';
-import { ResetPassword, SetPassword } from '../view/pages/ForgotPassword';
 
 const routes = [
   {

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import { loginRequest } from '../../services/REST/Login';
-import storage from '../../services/storage';
-import baseRESTService from '../../services/REST/BaseRESTService';
+import { setAuthCookies } from '../../utils/setAuthCookies';
 
 type LoginUserPayload = {
   email: string;
@@ -13,9 +13,8 @@ export const loginUser = createAsyncThunk(
   async (loginData: LoginUserPayload, { rejectWithValue }) => {
     try {
       const response = await loginRequest(loginData);
-      const user = JSON.stringify(response.data);
-      storage.addUser('user', user);
-      baseRESTService.setToken(response.data.token);
+      const { token, email, fullName } = response.data;
+      setAuthCookies({ token, email, fullName });
 
       return response.data;
     } catch (error: any) {

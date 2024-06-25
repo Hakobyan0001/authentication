@@ -1,17 +1,19 @@
-import { Box, Container, Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/rootReducer';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppDispatch } from '../../../redux/store';
-import { setPassword } from '../../../redux/thunks/setPasswordThunk';
-import SetValidator from '../../../utils/validators/SetValidator';
+
+import { Box, Container, Grid } from '@mui/material';
+
 import {
   setPasswordFormFields,
   setPasswordFormHeader,
   setPasswordFormLinks
 } from '../../../config/setPassword';
-import { AuthHeader, TextFieldMapper, AuthFormActions } from '../../components';
+import { RootState } from '../../../redux/rootReducer';
+import { AppDispatch } from '../../../redux/store';
+import { setPassword } from '../../../redux/thunks/setPasswordThunk';
+import SetValidator from '../../../utils/validators/SetValidator';
+import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
 import StyledComponents from '../../Styles';
 
 type setPasswordUserPayload = {
@@ -38,20 +40,21 @@ export default function SetPassword() {
   });
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+
   useEffect(() => {
     if (success) {
       navigate('/login');
     }
   }, [success, navigate]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   }
 
-  function handleSubmit(e: { preventDefault: () => void }) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const newErrors = SetValidator(formData);
     setErrors(newErrors);

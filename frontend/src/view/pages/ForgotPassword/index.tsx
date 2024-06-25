@@ -1,4 +1,4 @@
 import ResetPassword from './ResetPassword';
 import SetPassword from './SetPassword';
 
-export { SetPassword, ResetPassword };
+export { ResetPassword, SetPassword };

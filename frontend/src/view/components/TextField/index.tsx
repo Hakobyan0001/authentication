@@ -1,15 +1,18 @@
-import React from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+
 import { Grid, TextField } from '@mui/material';
+
 import VisibilityIcon from '../VisibilityIcon';
 
 type TextFieldMapperProps = {
   name: string;
   label: string;
   errorName?: string;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  // eslint-disable-next-line no-unused-vars
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   value: string;
   type: string;
-  setShowValue?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowValue?: Dispatch<SetStateAction<boolean>>;
   showValue?: boolean;
   autoFocus?: boolean;
 };

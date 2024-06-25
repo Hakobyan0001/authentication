@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { registerUser } from '../thunks/registerThunk';
 
 type RegisterState = {

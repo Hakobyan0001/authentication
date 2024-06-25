@@ -1,4 +1,5 @@
-import { Grid, Typography, Link } from '@mui/material';
+import { Grid, Link, Typography } from '@mui/material';
+
 import StyledComponents from '../../Styles';
 
 type AuthFormActionsProps = {
@@ -23,7 +24,7 @@ export default function AuthFormActions({ loading, error, formLinks }: AuthFormA
       <Grid container justifyContent="space-between">
         {formLinks?.map((link, index) => {
           return (
-            <Grid item key={index} >
+            <Grid item key={index}>
               <Link href={link.href} variant="body2">
                 {link.text}
               </Link>

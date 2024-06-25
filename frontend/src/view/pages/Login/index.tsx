@@ -1,19 +1,20 @@
-import { Box, Container, Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
+
+import { Box, Checkbox, Container, FormControlLabel, Grid } from '@mui/material';
+
+import { loginFormFields, loginFormHeader, loginFormLinks } from '../../../config/login';
+import { RootState } from '../../../redux/rootReducer';
 import { AppDispatch } from '../../../redux/store';
 import { loginUser } from '../../../redux/thunks/loginThunk';
 import LoginValidator from '../../../utils/validators/LoginValidator';
+import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
 import StyledComponents from '../../Styles';
-import { AuthHeader, TextFieldMapper, AuthFormActions } from '../../components';
-import { loginFormFields, loginFormHeader, loginFormLinks } from '../../../config/login';
 
 type LoginUserPayload = {
   emailError: string;
   passwordError: string;
-  // isRememberMe?: boolean;
 };
 type FormData = {
   email: string;
@@ -26,15 +27,14 @@ const { StyledBox } = StyledComponents;
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
   const { loading, error, success } = useSelector((state: RootState) => state.login);
   const [errors, setErrors] = useState({ emailError: '', passwordError: '' });
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: ''
-    // isRememberMe: false
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isRememberMe, setIsRememberMe] = useState(false);
 
   useEffect(() => {
     if (success) {
@@ -42,18 +42,21 @@ export default function Login() {
     }
   }, [success, navigate]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
 
-    setFormData({
-      ...formData,
-      // [name]: type === 'checkbox' ? checked : value
-      [name]: value
-    });
+    if (type === 'checkbox') {
+      setIsRememberMe(checked);
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   }
 
-  function handleSubmit(event: { preventDefault: () => void }) {
-    event.preventDefault();
+  function handleSubmit(e: FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
     const newErrors: LoginUserPayload = LoginValidator(formData);
     setErrors(newErrors);
 
@@ -76,7 +79,11 @@ export default function Login() {
                 name={field.name}
                 label={field.label}
                 autoFocus={index === 0}
-                errorName={errors[`${field.name}Error` as keyof LoginUserPayload]}
+                errorName={
+                  field.name === 'isRememberMe'
+                    ? undefined
+                    : errors[`${field.name}Error` as keyof LoginUserPayload]
+                }
                 handleChange={handleChange}
                 value={formData[field.name]}
                 type={field.name === 'password' && !showPassword ? 'password' : 'text'}
@@ -85,6 +92,10 @@ export default function Login() {
               />
             ))}
           </Grid>
+          <FormControlLabel
+            control={<Checkbox value={isRememberMe} color="primary" onChange={handleChange} />}
+            label="Remember me"
+          />
           <AuthFormActions loading={loading} error={error} formLinks={loginFormLinks} />
         </Box>
       </StyledBox>

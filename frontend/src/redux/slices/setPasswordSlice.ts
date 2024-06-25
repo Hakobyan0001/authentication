@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { setPassword } from '../thunks/setPasswordThunk';
 
 type setPasswordState = {
@@ -36,5 +37,5 @@ const setPasswordSlice = createSlice({
   }
 });
 
-export const {} = setPasswordSlice.actions;
+// export const {} = setPasswordSlice.actions;
 export default setPasswordSlice.reducer;

@@ -1,5 +1,5 @@
+import setPasswordFormFields from './setPasswordFormFields';
 import setPasswordFormHeader from './setPasswordFormHeader';
 import setPasswordFormLinks from './setPasswordFormLinks';
-import setPasswordFormFields from './setPasswordFormFields';
 
 export { setPasswordFormFields, setPasswordFormHeader, setPasswordFormLinks };

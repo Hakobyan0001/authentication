@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+
 import loginReducer from './slices/loginSlice';
 import registerReducer from './slices/registerSlice';
 import resetPasswordReducer from './slices/resetPasswordSlice';

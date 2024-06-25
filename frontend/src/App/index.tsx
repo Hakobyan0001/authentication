@@ -1,7 +1,9 @@
-import { CssBaseline } from '@mui/material';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import routes from '../routes';
 import { useSelector } from 'react-redux';
+import { Navigate, Route, Routes } from 'react-router-dom';
+
+import { CssBaseline } from '@mui/material';
+
+import routes from '../routes';
 
 function App() {
   const { user } = useSelector((state: any) => state.login);

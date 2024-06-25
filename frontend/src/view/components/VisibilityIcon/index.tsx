@@ -1,6 +1,7 @@
 import React from 'react';
-import { IconButton, InputAdornment } from '@mui/material';
+
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton, InputAdornment } from '@mui/material';
 
 type VisibilityIconProps = {
   setShowValue: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,7 +14,8 @@ function VisibilityIcon({ setShowValue, showValue }: VisibilityIconProps) {
       <IconButton
         aria-label={showValue ? 'Hide password' : 'Show password'}
         onClick={() => setShowValue(!showValue)}
-        edge="end">
+        edge="end"
+      >
         {showValue ? <VisibilityOff /> : <Visibility />}
       </IconButton>
     </InputAdornment>

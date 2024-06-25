@@ -1,17 +1,19 @@
-import { Box, Container, Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/rootReducer';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '../../../redux/store';
-import { resetPassword } from '../../../redux/thunks/resetPasswordThunk';
-import ResetValidator from '../../../utils/validators/ResetValidator';
+
+import { Box, Container, Grid } from '@mui/material';
+
 import {
   resetPasswordFormFields,
   resetPasswordFormHeader,
   resetPasswordFormLinks
 } from '../../../config/resetPassword';
-import { AuthHeader, TextFieldMapper, AuthFormActions } from '../../components';
+import { RootState } from '../../../redux/rootReducer';
+import { AppDispatch } from '../../../redux/store';
+import { resetPassword } from '../../../redux/thunks/resetPasswordThunk';
+import ResetValidator from '../../../utils/validators/ResetValidator';
+import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
 import StyledComponents from '../../Styles';
 
 type ResetPasswordUserPayload = {
@@ -39,15 +41,15 @@ export default function ResetPassword() {
     }
   }, [success, navigate]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   }
 
-  function handleSubmit(event: { preventDefault: () => void }) {
-    event.preventDefault();
+  function handleSubmit(e: FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
     const newErrors: ResetPasswordUserPayload = ResetValidator(formData);
     setErrors(newErrors);
 

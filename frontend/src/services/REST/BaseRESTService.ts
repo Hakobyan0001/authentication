@@ -1,51 +1,32 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, isAxiosError } from 'axios';
 const baseApiUrl = 'http://localhost:8080';
 
 class BaseRESTService {
-  token = '';
-
-  setToken(token: string) {
-    this.token = token;
-  }
-
-  getToken() {
-    return this.token;
-  }
-
-  run(rout: string, options: any) {
+  async run(rout: string, options: any) {
     let headers = {
       'Content-Type': 'application/json',
-      Authorization: ''
+      ...options.headers
     };
 
-    if (options.headers) {
-      headers = { ...headers, ...options.headers };
-    }
-
-    if (this.token) {
-      headers.Authorization = 'Bearer ' + this.token;
-    }
-
-    const config = {
+    const config: AxiosRequestConfig = {
       method: options.method,
       url: baseApiUrl + rout,
       data: options.data,
       headers,
-      params: ''
+      params: options.params || ''
     };
 
-    if (options.params) {
-      config.params = options.params;
+    try {
+      const response = await axios(config);
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response && error.response.status === 401) {
+        console.error('Unauthorized access - possibly invalid token');
+      }
+      throw error;
     }
-    return axios(config)
-      .then((response) => response)
-      .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          console.error('Unauthorized access - possibly invalid token');
-        }
-        throw error;
-      });
   }
 }
+
 const base = new BaseRESTService();
 export default base;

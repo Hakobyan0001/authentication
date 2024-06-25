@@ -1,15 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit';
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
+  persistReducer,
+  persistStore,
   PURGE,
-  REGISTER
+  REGISTER,
+  REHYDRATE
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+
+import { configureStore } from '@reduxjs/toolkit';
+
 import rootReducer from './rootReducer';
 
 const persistConfig = {

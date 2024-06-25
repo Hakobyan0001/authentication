@@ -1,6 +1,7 @@
-import { Typography } from '@mui/material';
-import StyledComponents from '../../Styles';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Typography } from '@mui/material';
+
+import StyledComponents from '../../Styles';
 
 type AuthHeaderProps = {
   title: string;
