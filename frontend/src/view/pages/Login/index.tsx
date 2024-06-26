@@ -64,7 +64,7 @@ export default function Login() {
       return;
     }
 
-    dispatch(loginUser(formData));
+    dispatch(loginUser({ ...formData, isRememberMe }));
   }
 
   return (

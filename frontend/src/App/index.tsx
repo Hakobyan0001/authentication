@@ -1,13 +1,19 @@
-import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { CssBaseline } from '@mui/material';
 
 import routes from '../routes';
 
-function App() {
-  const { user } = useSelector((state: any) => state.login);
+type User = {
+  token: string;
+  email: string;
+  fullName: string;
+} | null;
 
+type Props = {
+  user: User;
+};
+function App({ user }: Props) {
   return (
     <div className="App">
       <CssBaseline />

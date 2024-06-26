@@ -18,7 +18,7 @@ class BaseRESTService {
 
     try {
       const response = await axios(config);
-      return response.data;
+      return response;
     } catch (error) {
       if (isAxiosError(error) && error.response && error.response.status === 401) {
         console.error('Unauthorized access - possibly invalid token');

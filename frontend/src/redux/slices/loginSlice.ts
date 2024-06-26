@@ -1,21 +1,14 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 import { loginUser } from '../thunks/loginThunk';
 
 type LoginState = {
-  user: userState | null;
   loading: boolean;
   success: boolean;
   error: string | null;
 };
 
-type userState = {
-  id: string;
-  fullName: string;
-  email: string;
-};
 const initialState: LoginState = {
-  user: null,
   loading: false,
   success: false,
   error: null
@@ -24,31 +17,24 @@ const initialState: LoginState = {
 const loginSlice = createSlice({
   name: 'login',
   initialState,
-  reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.success = false;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<userState>) => {
+      .addCase(loginUser.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
-        state.user = action.payload;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as { message: string }).message || 'Login failed';
+        state.error = (action.error as { message: string }).message || 'Login failed';
         state.success = false;
       });
   }
 });
 
-export const { logout } = loginSlice.actions;
 export default loginSlice.reducer;
