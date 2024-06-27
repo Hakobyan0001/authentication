@@ -1,34 +1,26 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { CssBaseline } from '@mui/material';
 
+import { RootState } from '../redux/store';
 import routes from '../routes';
 
-type User = {
-  token: string;
-  email: string;
-  fullName: string;
-} | null;
+function App() {
+  const { user } = useSelector((state: RootState) => state.auth);
 
-type Props = {
-  user: User;
-};
-function App({ user }: Props) {
   return (
     <div className="App">
       <CssBaseline />
       <Routes>
-        {routes.map((route) =>
-          route.private ? (
-            user ? (
-              <Route key={route.path} path={route.path} element={route.element} />
-            ) : (
-              <Route key={route.path} path={route.path} element={<Navigate to="/login" />} />
-            )
-          ) : (
-            <Route key={route.path} path={route.path} element={route.element} />
-          )
-        )}
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={route.private && !user ? <Navigate to="/login" /> : route.element}
+          />
+        ))}
       </Routes>
     </div>
   );

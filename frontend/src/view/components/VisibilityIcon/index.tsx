@@ -14,8 +14,7 @@ function VisibilityIcon({ setShowValue, showValue }: VisibilityIconProps) {
       <IconButton
         aria-label={showValue ? 'Hide password' : 'Show password'}
         onClick={() => setShowValue(!showValue)}
-        edge="end"
-      >
+        edge="end">
         {showValue ? <VisibilityOff /> : <Visibility />}
       </IconButton>
     </InputAdornment>

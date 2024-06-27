@@ -31,11 +31,10 @@ export async function login(req: Request, res: Response): Promise<void> {
         message: 'Invalid email or password'
       });
     }
-
-    const token = generateToken(user);
     const userDTO = toDTO(user);
+    const token = generateToken(userDTO);
 
-    res.json({ token, ...userDTO });
+    res.json({ token });
   } catch (error) {
     console.error('Login error:', error);
     setStatus(res, true, {

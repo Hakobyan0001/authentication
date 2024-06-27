@@ -1,19 +1,24 @@
+import { jwtDecode } from 'jwt-decode';
+
 import { createSlice } from '@reduxjs/toolkit';
+
+import { localStorage, sessionStorage } from '../../services';
 
 type AuthState = {
   user: User | null;
 };
 
 type User = {
-  token: string;
   email: string;
   fullName: string;
 };
 
-const initialState: AuthState = {
-  user: null
-};
+const storedAuthToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+const userData = storedAuthToken ? jwtDecode<User>(storedAuthToken) : null;
 
+const initialState: AuthState = {
+  user: userData ? { email: userData.email, fullName: userData.fullName } : null
+};
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -23,6 +28,8 @@ const authSlice = createSlice({
     },
     clearUserData(state) {
       state.user = null;
+      localStorage.deleteItem('authToken');
+      sessionStorage.deleteItem('authToken');
     }
   }
 });

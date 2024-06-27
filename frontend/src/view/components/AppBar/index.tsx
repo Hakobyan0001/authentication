@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,13 +7,14 @@ import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { clearUserData } from '../../../redux/slices/authSlice';
 
 type User = {
-  token: string;
   email: string;
   fullName: string;
 } | null;
+
 type Props = {
   user: User;
 };
+
 export default function AppBarComponent({ user }: Props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();

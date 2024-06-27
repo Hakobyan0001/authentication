@@ -2,25 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import auth from '../../config/auth';
 
-interface JwtPayload {
-  id: string;
-  email: string;
-}
-
 export default function verifyToken(req: Request, res: Response, next: NextFunction) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const authToken = req.cookies.authToken;
 
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
-
-  jwt.verify(token, auth.secret, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: 'Failed to authenticate token' });
-    }
-
-    req.user = decoded as JwtPayload;
+  try {
+    const user = jwt.verify(authToken, auth.secret);
+    req.user = user;
     next();
-  });
+  } catch (err) {
+    res.clearCookie('authToken');
+    return res.redirect('/login');
+  }
 }

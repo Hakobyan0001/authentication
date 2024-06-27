@@ -36,11 +36,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isRememberMe, setIsRememberMe] = useState(false);
 
-  useEffect(() => {
-    if (success) {
-      navigate('/');
-    }
-  }, [success, navigate]);
+  // useEffect(() => {
+  //   if (success) {
+  //     navigate('/');
+  //   }
+  // }, [success, navigate]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;

@@ -1,14 +1,20 @@
+import { jwtDecode } from 'jwt-decode';
+
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import cookieService from '../../services/CookieService';
+import { localStorage, sessionStorage } from '../../services';
 import { loginRequest } from '../../services/REST/Login';
-import storage from '../../services/storage';
 import { setUserData } from '../slices/authSlice';
-
 type LoginUserPayload = {
   email: string;
   password: string;
   isRememberMe: boolean;
+};
+type JwtPayload = {
+  email: string;
+  fullName: string;
+  exp: number;
+  iat: number;
 };
 
 export const loginUser = createAsyncThunk(
@@ -16,16 +22,16 @@ export const loginUser = createAsyncThunk(
   async (loginData: LoginUserPayload, { dispatch, rejectWithValue }) => {
     try {
       const response = await loginRequest(loginData);
-      const { token, email, fullName } = response.data;
-      if (loginData.isRememberMe) {
-        cookieService.setCookieWithRemMe('token', token);
-        cookieService.setCookieWithRemMe('userInfo', { email, fullName });
+      const jwtToken = response.data.token;
+      const decoded: JwtPayload = jwtDecode(jwtToken);
+
+      if (!loginData.isRememberMe) {
+        sessionStorage.addItem('authToken', jwtToken);
       } else {
-        cookieService.setCookieWithoutRemMe('token', token);
-        cookieService.setCookieWithoutRemMe('userInfo', { email, fullName });
+        localStorage.addItem('authToken', jwtToken);
       }
-      storage.addUser('userDataLoaded', true);
-      dispatch(setUserData(response.data));
+
+      dispatch(setUserData({ email: decoded.email, fullName: decoded.fullName }));
       return response.data;
     } catch (error: any) {
       if (!error.response) {
