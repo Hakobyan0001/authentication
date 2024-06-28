@@ -17,13 +17,7 @@ const initialState: RegisterState = {
 const registerSlice = createSlice({
   name: 'register',
   initialState,
-  reducers: {
-    resetRegisterState: (state) => {
-      state.loading = false;
-      state.error = null;
-      state.success = false;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -43,5 +37,4 @@ const registerSlice = createSlice({
   }
 });
 
-export const { resetRegisterState } = registerSlice.actions;
 export default registerSlice.reducer;

@@ -3,7 +3,7 @@ import { isValidEmail } from '../utils/validators';
 
 const prisma = new PrismaClient();
 
-class UsersService {
+class AuthService {
   async findUser(email: string) {
     const user = await prisma.user.findFirst({
       where: {
@@ -41,4 +41,4 @@ class UsersService {
   }
 }
 
-export default UsersService;
+export default AuthService;

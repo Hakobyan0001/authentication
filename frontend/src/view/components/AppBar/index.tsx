@@ -1,21 +1,15 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 
 import { clearUserData } from '../../../redux/slices/authSlice';
+import { RootState } from '../../../redux/store';
 
-type User = {
-  email: string;
-  fullName: string;
-} | null;
+export default function AppBarComponent() {
+  const { user } = useSelector((state: RootState) => state.auth);
 
-type Props = {
-  user: User;
-};
-
-export default function AppBarComponent({ user }: Props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

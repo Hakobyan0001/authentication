@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import setStatus from '../utils/setStatus';
-import UsersService from '../services/UsersService';
+import AuthService from '../services/AuthService';
 import { toDTO } from '../mappers/user';
 import statusCodes from '../config/statusCodes';
 import { PrismaClient } from '@prisma/client';
@@ -9,18 +9,19 @@ import bcryptHelper from '../utils/bcrypt';
 import crypto from 'crypto';
 
 const prisma = new PrismaClient();
-const userService = new UsersService();
+const authService = new AuthService();
 const { hashPassword, comparePassword } = bcryptHelper();
 
 export async function login(req: Request, res: Response): Promise<void> {
   const { email, password } = req.body;
   try {
-    const user = await userService.findUser(email);
+    const user = await authService.findUser(email);
 
     if (!user) {
       return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
-        message: 'Invalid email or password'
+        message: 'Invalid email or password',
+        severity: 'error'
       });
     }
     const isPasswordValid = comparePassword(password, user.password);
@@ -28,18 +29,20 @@ export async function login(req: Request, res: Response): Promise<void> {
     if (!isPasswordValid) {
       return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
-        message: 'Invalid email or password'
+        message: 'Invalid email or password',
+        severity: 'error'
       });
     }
     const userDTO = toDTO(user);
     const token = generateToken(userDTO);
 
-    res.json({ token });
+    res.json({ token, severity: 'success', message: 'Login successful' });
   } catch (error) {
     console.error('Login error:', error);
     setStatus(res, true, {
       status: statusCodes.ServerError,
-      message: 'Server error'
+      message: 'Server error',
+      severity: 'error'
     });
   }
 }
@@ -50,15 +53,17 @@ export async function register(req: Request, res: Response): Promise<void> {
   if (!fullName || !email || !password || password.length < 6) {
     return setStatus(res, true, {
       status: statusCodes.BadRequestError,
-      message: 'Bad Request. Please provide valid values for all fields.'
+      message: 'Bad Request. Please provide valid values for all fields.',
+      severity: 'error'
     });
   }
   try {
-    const validationError = await userService.isInvalidEmail(email);
+    const validationError = await authService.isInvalidEmail(email);
     if (validationError) {
       return setStatus(res, true, {
         status: statusCodes.BadRequestError,
-        message: validationError.message
+        message: validationError.message,
+        severity: 'error'
       });
     }
     const hashedPassword = hashPassword({ password });
@@ -72,12 +77,14 @@ export async function register(req: Request, res: Response): Promise<void> {
     });
     setStatus(res, false, {
       status: statusCodes.Created,
-      message: 'Your account has been created. Please login.'
+      message: 'Your account has been created. Please login.',
+      severity: 'success'
     });
   } catch (error) {
     setStatus(res, true, {
       status: statusCodes.ServerError,
-      message: 'Server error'
+      message: 'Server error',
+      severity: 'error'
     });
   }
 }
@@ -85,12 +92,13 @@ export async function register(req: Request, res: Response): Promise<void> {
 export async function resetPassword(req: Request, res: Response) {
   const { email } = req.body;
   try {
-    const user = await userService.findUser(email);
+    const user = await authService.findUser(email);
 
     if (!user) {
       return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
-        message: 'User not found'
+        message: 'User not found',
+        severity: 'error'
       });
     }
     const token = crypto.randomBytes(20).toString('hex');
@@ -104,7 +112,7 @@ export async function resetPassword(req: Request, res: Response) {
       }
     });
 
-    res.json({ token });
+    res.json({ token, severity: 'info', message: 'Password reset token generated' });
   } catch (error) {
     console.error('reset Password error:', error);
     setStatus(res, true, {
@@ -132,27 +140,30 @@ export async function setPassword(req: Request, res: Response) {
     if (!resetToken) {
       setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
-        message: 'Invalid or expired token'
+        message: 'Invalid or expired token',
+        severity: 'error'
       });
       return;
     }
+    const hashedPassword = hashPassword({ password });
 
-    const isChanged = await userService.changePassword(resetToken.userId, password);
+    const isChanged = await authService.changePassword(resetToken.userId, hashedPassword);
 
     if (!isChanged) {
       setStatus(res, true, {
         status: statusCodes.ServerError,
-        message: 'Failed to update password'
+        message: 'Failed to update password',
+        severity: 'error'
       });
       return;
     }
 
-    res.json(true);
+    res.json({ severity: 'success', message: 'Password updated successfully' });
   } catch (error) {
-    console.error('Set Password error:', error);
     setStatus(res, true, {
       status: statusCodes.ServerError,
-      message: 'Server error'
+      message: 'Server error',
+      severity: 'error'
     });
   }
 }

@@ -10,7 +10,6 @@ import {
   registerFormLinks
 } from '../../../config/register';
 import { RootState } from '../../../redux/rootReducer';
-import { resetRegisterState } from '../../../redux/slices/registerSlice';
 import { AppDispatch } from '../../../redux/store';
 import { registerUser } from '../../../redux/thunks/registerThunk';
 import RegisterValidator from '../../../utils/validators/RegisterValidator';
@@ -33,7 +32,7 @@ type FormData = {
 
 const { StyledBox } = StyledComponents;
 
-export default function Registration() {
+export default function Register() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error, success } = useSelector((state: RootState) => state.register);
@@ -56,9 +55,8 @@ export default function Registration() {
   useEffect(() => {
     if (success) {
       navigate('/login');
-      dispatch(resetRegisterState());
     }
-  }, [success, navigate, dispatch]);
+  }, [success, navigate]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;

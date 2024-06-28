@@ -1,11 +1,10 @@
 import React from 'react';
-import { CookiesProvider } from 'react-cookie';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import store from './redux/store';
-import Layout from './Layout';
+import Router from './view/Routes';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
@@ -14,9 +13,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <CookiesProvider>
-          <Layout />
-        </CookiesProvider>
+        <Router />
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

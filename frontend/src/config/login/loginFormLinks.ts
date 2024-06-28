@@ -1,5 +1,5 @@
 const loginFormLinks = [
-  { href: '/registration', text: "Don't have an account? Sign Up" },
-  { href: '/resetPassword', text: 'Forgot password?' }
+  { href: '/resetPassword', text: 'Forgot password?' },
+  { href: '/register', text: "Don't have an account? Sign Up" }
 ];
 export default loginFormLinks;
