@@ -44,6 +44,7 @@ function TextFieldMapper({
         error={!!errorName}
         helperText={errorName}
         type={type}
+        autoComplete={name}
         InputProps={
           isPassword
             ? {

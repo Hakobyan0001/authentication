@@ -32,7 +32,7 @@ export default function SetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
-  const { loading, error, success } = useSelector((state: RootState) => state.setPassword);
+  const { loading, success } = useSelector((state: RootState) => state.setPassword);
   const [errors, setErrors] = useState({ newPasswordError: '', confirmNewPasswordError: '' });
   const [formData, setFormData] = useState<FormData>({
     newPassword: '',
@@ -107,7 +107,7 @@ export default function SetPassword() {
               />
             ))}
           </Grid>
-          <AuthFormActions loading={loading} error={error} formLinks={setPasswordFormLinks} />
+          <AuthFormActions loading={loading} formLinks={setPasswordFormLinks} />
         </Box>
       </StyledBox>
     </Container>

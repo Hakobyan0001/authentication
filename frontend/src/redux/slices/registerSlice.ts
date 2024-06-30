@@ -4,13 +4,13 @@ import { registerUser } from '../thunks/registerThunk';
 
 type RegisterState = {
   loading: boolean;
-  error: string | null;
+  error: boolean;
   success: boolean;
 };
 
 const initialState: RegisterState = {
   loading: false,
-  error: null,
+  error: false,
   success: false
 };
 
@@ -27,11 +27,9 @@ const registerSlice = createSlice({
         state.loading = false;
         state.success = true;
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(registerUser.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload
-          ? (action.payload as { message: string }).message
-          : 'Registration failed';
+        state.error = true;
         state.success = false;
       });
   }

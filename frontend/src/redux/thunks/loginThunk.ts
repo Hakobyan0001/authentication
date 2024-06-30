@@ -20,7 +20,7 @@ type JwtPayload = {
 
 export const loginUser = createAsyncThunk(
   'auth/login',
-  async (loginData: LoginUserPayload, { dispatch, rejectWithValue }) => {
+  async (loginData: LoginUserPayload, { dispatch }) => {
     try {
       const response = await loginRequest(loginData);
       const jwtToken = response.data.token;
@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
         localStorage.addItem('authToken', jwtToken);
       }
       dispatch(
-        setSnackbarMessage({ message: response.data.massage, severity: response.data.severity })
+        setSnackbarMessage({ message: response.data.message, severity: response.data.severity })
       );
       dispatch(setUserData({ email: decoded.email, fullName: decoded.fullName }));
       return response.data;
@@ -43,10 +43,9 @@ export const loginUser = createAsyncThunk(
       dispatch(
         setSnackbarMessage({
           message: error.response.data.message,
-          severity: 'error'
+          severity: error.response.data.severity
         })
       );
-      return rejectWithValue(error.response.data);
     }
   }
 );

@@ -29,7 +29,7 @@ const { StyledBox } = StyledComponents;
 export default function ResetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { loading, error, success } = useSelector((state: RootState) => state.resetPassword);
+  const { loading, success } = useSelector((state: RootState) => state.resetPassword);
   const [errors, setErrors] = useState({ emailError: '' });
   const [formData, setFormData] = useState<FormData>({
     email: ''
@@ -78,7 +78,7 @@ export default function ResetPassword() {
               />
             ))}
           </Grid>
-          <AuthFormActions loading={loading} error={error} formLinks={resetPasswordFormLinks} />
+          <AuthFormActions loading={loading} formLinks={resetPasswordFormLinks} />
         </Box>
       </StyledBox>
     </Container>

@@ -27,7 +27,7 @@ const { StyledBox } = StyledComponents;
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { loading, error, success } = useSelector((state: RootState) => state.login);
+  const { loading, success } = useSelector((state: RootState) => state.login);
   const [errors, setErrors] = useState({ emailError: '', passwordError: '' });
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -93,7 +93,7 @@ export default function Login() {
             control={<Checkbox value={isRememberMe} color="primary" onChange={handleChange} />}
             label="Remember me"
           />
-          <AuthFormActions loading={loading} error={error} formLinks={loginFormLinks} />
+          <AuthFormActions loading={loading} formLinks={loginFormLinks} />
         </Box>
       </StyledBox>
     </Container>

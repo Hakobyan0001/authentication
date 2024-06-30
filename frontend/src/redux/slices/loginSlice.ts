@@ -5,13 +5,13 @@ import { loginUser } from '../thunks/loginThunk';
 type LoginState = {
   loading: boolean;
   success: boolean;
-  error: string | null;
+  error: boolean;
 };
 
 const initialState: LoginState = {
   loading: false,
   success: false,
-  error: null
+  error: false
 };
 
 const loginSlice = createSlice({
@@ -22,19 +22,17 @@ const loginSlice = createSlice({
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = false;
       })
       .addCase(loginUser.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
-        state.error = null;
+        state.error = false;
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(loginUser.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload
-          ? (action.payload as { message: string }).message
-          : 'Login failed';
         state.success = false;
+        state.error = true;
       });
   }
 });

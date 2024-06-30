@@ -35,7 +35,7 @@ const { StyledBox } = StyledComponents;
 export default function Register() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { loading, error, success } = useSelector((state: RootState) => state.register);
+  const { loading, success } = useSelector((state: RootState) => state.register);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
@@ -115,7 +115,7 @@ export default function Register() {
               />
             ))}
           </Grid>
-          <AuthFormActions loading={loading} error={error} formLinks={registerFormLinks} />
+          <AuthFormActions loading={loading} formLinks={registerFormLinks} />
         </Box>
       </StyledBox>
     </Container>

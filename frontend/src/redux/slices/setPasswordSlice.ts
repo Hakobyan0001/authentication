@@ -5,13 +5,13 @@ import { setPassword } from '../thunks/setPasswordThunk';
 type setPasswordState = {
   loading: boolean;
   success: boolean;
-  error: string | null;
+  error: boolean;
 };
 
 const initialState: setPasswordState = {
   loading: false,
   success: false,
-  error: null
+  error: false
 };
 
 const setPasswordSlice = createSlice({
@@ -27,11 +27,9 @@ const setPasswordSlice = createSlice({
         state.loading = false;
         state.success = true;
       })
-      .addCase(setPassword.rejected, (state, action) => {
+      .addCase(setPassword.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload
-          ? (action.payload as { message: string }).message
-          : 'Set password is failed';
+        state.error = true;
         state.success = false;
       });
   }

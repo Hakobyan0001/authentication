@@ -3,17 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 import { resetPassword } from '../thunks/resetPasswordThunk';
 
 type ResetPasswordState = {
-  token: string | null;
   loading: boolean;
   success: boolean;
-  error: string | null;
+  error: boolean;
 };
 
 const initialState: ResetPasswordState = {
-  token: null,
   loading: false,
   success: false,
-  error: null
+  error: false
 };
 
 const resetPasswordSlice = createSlice({
@@ -28,14 +26,11 @@ const resetPasswordSlice = createSlice({
       .addCase(resetPassword.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.token = action.payload;
-        console.log(state.token);
+        console.log(action.payload.token);
       })
-      .addCase(resetPassword.rejected, (state, action) => {
+      .addCase(resetPassword.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload
-          ? (action.payload as { message: string }).message
-          : 'reset password is failed';
+        state.error = true;
         state.success = false;
       });
   }
