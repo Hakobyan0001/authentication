@@ -22,10 +22,13 @@ const setPasswordSlice = createSlice({
     builder
       .addCase(setPassword.pending, (state) => {
         state.loading = true;
+        state.success = false;
+        state.error = false;
       })
       .addCase(setPassword.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
+        state.error = false;
       })
       .addCase(setPassword.rejected, (state) => {
         state.loading = false;

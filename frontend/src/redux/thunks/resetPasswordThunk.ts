@@ -9,7 +9,7 @@ type resetPasswordUserPayload = {
 
 export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
-  async (userData: resetPasswordUserPayload, { dispatch }) => {
+  async (userData: resetPasswordUserPayload, { dispatch, rejectWithValue }) => {
     try {
       const response = await resetPasswordRequest(userData);
       dispatch(
@@ -26,6 +26,7 @@ export const resetPassword = createAsyncThunk(
           severity: error.response.data.severity
         })
       );
+      return rejectWithValue(error.response.data);
     }
   }
 );

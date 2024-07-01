@@ -11,7 +11,7 @@ type RegisterUserPayload = {
 
 export const registerUser = createAsyncThunk(
   'auth/register',
-  async (userData: RegisterUserPayload, { dispatch }) => {
+  async (userData: RegisterUserPayload, { dispatch, rejectWithValue }) => {
     try {
       const response = await registerRequest(userData);
       dispatch(
@@ -28,6 +28,7 @@ export const registerUser = createAsyncThunk(
           severity: error.response.data.severity
         })
       );
+      return rejectWithValue(error.response.data);
     }
   }
 );

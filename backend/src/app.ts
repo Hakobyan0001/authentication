@@ -1,17 +1,17 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { urlencoded, json } from 'body-parser';
 import cors from 'cors';
-
+import './utils/cleanupExpiredTokens';
 import router from './routes';
-import statusCodes from './config/statusCodes';
+import {statusCodes} from './config';
 import setStatus from './utils/setStatus';
-import cookieParser from 'cookie-parser'
+// import cookieParser from 'cookie-parser';
 const app = express();
 
 // Middlewares
 app.use(cors());
 app.use(urlencoded({ extended: false }));
-app.use(cookieParser())
+// app.use(cookieParser());
 app.use(json());
 
 // Routes

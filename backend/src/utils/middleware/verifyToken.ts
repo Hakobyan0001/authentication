@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import auth from '../../config/auth';
+import { auth } from '../../config';
 
 export default function verifyToken(req: Request, res: Response, next: NextFunction) {
   const authToken = req.cookies.authToken;

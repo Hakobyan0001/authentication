@@ -15,13 +15,13 @@ class AuthService {
   }
   async isInvalidEmail(email: string) {
     if (!isValidEmail(email)) {
-      return { message: 'Invalid email', error: true };
+      return { message: 'Invalid email' };
     }
     const existingUser = await prisma.user.findFirst({
       where: { email }
     });
     if (existingUser) {
-      return { message: 'Email already taken', error: true };
+      return { message: 'Email already taken' };
     }
     return false;
   }

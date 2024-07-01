@@ -23,6 +23,7 @@ const loginSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = false;
+        state.success = false;
       })
       .addCase(loginUser.fulfilled, (state) => {
         state.loading = false;

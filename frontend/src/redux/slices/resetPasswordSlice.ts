@@ -22,10 +22,14 @@ const resetPasswordSlice = createSlice({
     builder
       .addCase(resetPassword.pending, (state) => {
         state.loading = true;
+        state.success = false;
+        state.error = false;
       })
       .addCase(resetPassword.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
+        state.error = false;
+
         console.log(action.payload.token);
       })
       .addCase(resetPassword.rejected, (state) => {

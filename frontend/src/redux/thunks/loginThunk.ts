@@ -20,7 +20,7 @@ type JwtPayload = {
 
 export const loginUser = createAsyncThunk(
   'auth/login',
-  async (loginData: LoginUserPayload, { dispatch }) => {
+  async (loginData: LoginUserPayload, { dispatch, rejectWithValue }) => {
     try {
       const response = await loginRequest(loginData);
       const jwtToken = response.data.token;
@@ -46,6 +46,7 @@ export const loginUser = createAsyncThunk(
           severity: error.response.data.severity
         })
       );
+      return rejectWithValue(error.response.data);
     }
   }
 );

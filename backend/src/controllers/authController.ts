@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import setStatus from '../utils/setStatus';
 import AuthService from '../services/AuthService';
 import { toDTO } from '../mappers/user';
-import statusCodes from '../config/statusCodes';
+import { statusCodes, severities } from '../config';
 import { PrismaClient } from '@prisma/client';
 import generateToken from '../utils/generateToken';
 import bcryptHelper from '../utils/bcrypt';
@@ -21,7 +21,7 @@ export async function login(req: Request, res: Response): Promise<void> {
       return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
         message: 'Invalid email or password',
-        severity: 'error'
+        severity: severities.error
       });
     }
     const isPasswordValid = comparePassword(password, user.password);
@@ -30,19 +30,19 @@ export async function login(req: Request, res: Response): Promise<void> {
       return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
         message: 'Invalid email or password',
-        severity: 'error'
+        severity: severities.error
       });
     }
     const userDTO = toDTO(user);
     const token = generateToken(userDTO);
 
-    res.json({ token, severity: 'success', message: 'Login successful' });
+    res.json({ token, severity: severities.success, message: 'Login successful' });
   } catch (error) {
     console.error('Login error:', error);
     setStatus(res, true, {
       status: statusCodes.ServerError,
       message: 'Server error',
-      severity: 'error'
+      severity: severities.error
     });
   }
 }
@@ -54,7 +54,7 @@ export async function register(req: Request, res: Response): Promise<void> {
     return setStatus(res, true, {
       status: statusCodes.BadRequestError,
       message: 'Bad Request. Please provide valid values for all fields.',
-      severity: 'error'
+      severity: severities.error
     });
   }
   try {
@@ -63,7 +63,7 @@ export async function register(req: Request, res: Response): Promise<void> {
       return setStatus(res, true, {
         status: statusCodes.BadRequestError,
         message: validationError.message,
-        severity: 'error'
+        severity: severities.error
       });
     }
     const hashedPassword = hashPassword({ password });
@@ -77,14 +77,14 @@ export async function register(req: Request, res: Response): Promise<void> {
     });
     setStatus(res, false, {
       status: statusCodes.Created,
-      message: 'Your account has been created. Please login.',
-      severity: 'success'
+      message: 'Your account has been created. Please login',
+      severity: severities.success
     });
   } catch (error) {
     setStatus(res, true, {
       status: statusCodes.ServerError,
       message: 'Server error',
-      severity: 'error'
+      severity: severities.error
     });
   }
 }
@@ -98,7 +98,7 @@ export async function resetPassword(req: Request, res: Response) {
       return setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
         message: 'User not found',
-        severity: 'error'
+        severity: severities.error
       });
     }
     const token = crypto.randomBytes(20).toString('hex');
@@ -112,12 +112,13 @@ export async function resetPassword(req: Request, res: Response) {
       }
     });
 
-    res.json({ token, severity: 'info', message: 'Password reset token generated' });
+    res.json({ token, severity: severities.info, message: 'Password reset token generated' });
   } catch (error) {
     console.error('reset Password error:', error);
     setStatus(res, true, {
       status: statusCodes.ServerError,
-      message: 'Server error'
+      message: 'Server error',
+      severity: severities.error
     });
   }
 }
@@ -141,7 +142,7 @@ export async function setPassword(req: Request, res: Response) {
       setStatus(res, true, {
         status: statusCodes.NotFoundStatus,
         message: 'Invalid or expired token',
-        severity: 'error'
+        severity: severities.error
       });
       return;
     }
@@ -153,17 +154,17 @@ export async function setPassword(req: Request, res: Response) {
       setStatus(res, true, {
         status: statusCodes.ServerError,
         message: 'Failed to update password',
-        severity: 'error'
+        severity: severities.error
       });
       return;
     }
 
-    res.json({ severity: 'success', message: 'Password updated successfully' });
+    res.json({ severity: severities.success, message: 'Password updated successfully' });
   } catch (error) {
     setStatus(res, true, {
       status: statusCodes.ServerError,
       message: 'Server error',
-      severity: 'error'
+      severity: severities.error
     });
   }
 }
