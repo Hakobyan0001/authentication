@@ -1,15 +1,15 @@
 import base from './BaseRESTService';
 
-export const loginRequest = async (data: any) => {
-  try {
-    const response = await base.run('/auth/login', {
-      method: 'POST',
-      data
-    });
+interface LoginData {
+  email: string;
+  password: string;
+}
 
-    return response;
-  } catch (error) {
-    console.error('Login failed:', error);
-    throw error;
-  }
+export const loginRequest = async (data: LoginData) => {
+  const response = await base.run('/auth/login', {
+    method: 'POST',
+    data
+  });
+
+  return response;
 };

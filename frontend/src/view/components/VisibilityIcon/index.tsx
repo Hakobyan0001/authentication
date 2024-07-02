@@ -3,10 +3,10 @@ import React from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { IconButton, InputAdornment } from '@mui/material';
 
-type VisibilityIconProps = {
+interface VisibilityIconProps {
   setShowValue: React.Dispatch<React.SetStateAction<boolean>>;
   showValue?: boolean;
-};
+}
 
 function VisibilityIcon({ setShowValue, showValue }: VisibilityIconProps) {
   return (

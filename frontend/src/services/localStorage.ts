@@ -1,4 +1,4 @@
-const addItem = (key: string, item: any) => {
+const addItem = (key: string, item: unknown) => {
   localStorage.setItem(key, JSON.stringify(item));
 };
 

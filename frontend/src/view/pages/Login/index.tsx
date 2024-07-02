@@ -12,15 +12,15 @@ import LoginValidator from '../../../utils/validators/LoginValidator';
 import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
 import StyledComponents from '../../Styles';
 
-type LoginUserPayload = {
+interface LoginUserPayload {
   emailError: string;
   passwordError: string;
-};
-type FormData = {
+}
+interface FormData {
   email: string;
   password: string;
   [key: string]: string;
-};
+}
 
 const { StyledBox } = StyledComponents;
 
@@ -28,7 +28,7 @@ export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, success } = useSelector((state: RootState) => state.login);
-  const [errors, setErrors] = useState({ emailError: '', passwordError: '' });
+  const [errors, setErrors] = useState<LoginUserPayload>({ emailError: '', passwordError: '' });
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: ''
@@ -37,14 +37,12 @@ export default function Login() {
   const [isRememberMe, setIsRememberMe] = useState(false);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    const { name, value, type, checked } = e.target;
-
-    if (type === 'checkbox') {
-      setIsRememberMe(checked);
+    if (e.target.type === 'checkbox') {
+      setIsRememberMe(e.target.checked);
     } else {
       setFormData({
         ...formData,
-        [name]: value
+        [e.target.name]: e.target.value
       });
     }
   }

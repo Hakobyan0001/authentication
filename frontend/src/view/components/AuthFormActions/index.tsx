@@ -2,10 +2,10 @@ import { Grid, Link } from '@mui/material';
 
 import StyledComponents from '../../Styles';
 
-type AuthFormActionsProps = {
+interface AuthFormActionsProps {
   loading: boolean;
   formLinks?: { href: string; text: string }[];
-};
+}
 
 const { StyledButton } = StyledComponents;
 

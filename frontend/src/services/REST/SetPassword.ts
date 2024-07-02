@@ -1,6 +1,11 @@
 import base from './BaseRESTService';
 
-export const setPasswordRequest = (data: any) => {
+interface SetPasswordData {
+  token: string;
+  password: string;
+}
+
+export const setPasswordRequest = (data: SetPasswordData) => {
   return base.run('/auth/SetPassword', {
     method: 'PATCH',
     data

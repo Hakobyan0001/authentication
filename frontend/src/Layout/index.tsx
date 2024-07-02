@@ -8,9 +8,9 @@ import { closeSnackbar } from '../redux/slices/SnackBarSlice';
 import { AppDispatch } from '../redux/store';
 import { AppBar, SnackBar } from '../view/components';
 
-type LayoutProps = {
+interface LayoutProps {
   children: ReactNode;
-};
+}
 
 export default function Layout({ children }: LayoutProps) {
   const dispatch = useDispatch<AppDispatch>();

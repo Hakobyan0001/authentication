@@ -16,15 +16,16 @@ import SetValidator from '../../../utils/validators/SetValidator';
 import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
 import StyledComponents from '../../Styles';
 
-type setPasswordUserPayload = {
+interface SetPasswordUserPayload {
   newPasswordError: string;
   confirmNewPasswordError: string;
-};
-type FormData = {
+}
+
+interface FormData {
   newPassword: string;
   confirmNewPassword: string;
   [key: string]: string;
-};
+}
 
 const { StyledBox } = StyledComponents;
 
@@ -33,7 +34,10 @@ export default function SetPassword() {
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
   const { loading, success } = useSelector((state: RootState) => state.setPassword);
-  const [errors, setErrors] = useState({ newPasswordError: '', confirmNewPasswordError: '' });
+  const [errors, setErrors] = useState<SetPasswordUserPayload>({
+    newPasswordError: '',
+    confirmNewPasswordError: ''
+  });
   const [formData, setFormData] = useState<FormData>({
     newPassword: '',
     confirmNewPassword: ''
@@ -81,7 +85,7 @@ export default function SetPassword() {
                 name={field.name}
                 label={field.label}
                 autoFocus={index === 0}
-                errorName={errors[`${field.name}Error` as keyof setPasswordUserPayload]}
+                errorName={errors[`${field.name}Error` as keyof SetPasswordUserPayload]}
                 handleChange={handleChange}
                 value={formData[field.name]}
                 type={

@@ -16,13 +16,14 @@ import ResetValidator from '../../../utils/validators/ResetValidator';
 import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
 import StyledComponents from '../../Styles';
 
-type ResetPasswordUserPayload = {
+interface ResetPasswordUserPayload {
   emailError: string;
-};
-type FormData = {
+}
+
+interface FormData {
   email: string;
   [key: string]: string;
-};
+}
 
 const { StyledBox } = StyledComponents;
 
@@ -30,7 +31,7 @@ export default function ResetPassword() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, success } = useSelector((state: RootState) => state.resetPassword);
-  const [errors, setErrors] = useState({ emailError: '' });
+  const [errors, setErrors] = useState<ResetPasswordUserPayload>({ emailError: '' });
   const [formData, setFormData] = useState<FormData>({
     email: ''
   });

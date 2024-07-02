@@ -1,6 +1,10 @@
 import base from './BaseRESTService';
 
-export const resetPasswordRequest = (data: any) => {
+interface ResetPasswordData {
+  email: string;
+}
+
+export const resetPasswordRequest = (data: ResetPasswordData) => {
   return base.run('/auth/resetPassword', {
     method: 'POST',
     data

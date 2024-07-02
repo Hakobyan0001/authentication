@@ -1,17 +1,17 @@
 import { validateEmail, validateFullName, validateNewPassword } from './validatorUtils';
 
-type RegisterFormTypes = {
+interface RegisterFormTypes {
   email: string;
   fullName: string;
   newPassword: string;
   confirmNewPassword: string;
-};
-type ValidationErrorType = {
+}
+interface ValidationErrorType {
   emailError: string;
   fullNameError: string;
   newPasswordError: string;
   confirmNewPasswordError: string;
-};
+}
 
 function RegisterValidator(formData: RegisterFormTypes): ValidationErrorType {
   const fullNameError = validateFullName(formData.fullName);

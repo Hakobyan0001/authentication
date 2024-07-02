@@ -3,9 +3,9 @@ import { Typography } from '@mui/material';
 
 import StyledComponents from '../../Styles';
 
-type AuthHeaderProps = {
+interface AuthHeaderProps {
   title: string;
-};
+}
 const { StyledAvatar } = StyledComponents;
 
 function AuthHeader({ title }: AuthHeaderProps) {

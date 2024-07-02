@@ -16,19 +16,19 @@ import RegisterValidator from '../../../utils/validators/RegisterValidator';
 import { AuthFormActions, AuthHeader, TextFieldMapper } from '../../components';
 import StyledComponents from '../../Styles';
 
-type RegisterUserPayload = {
+interface RegisterUserPayload {
   fullNameError: string;
   newPasswordError: string;
   confirmNewPasswordError: string;
   emailError: string;
-};
-type FormData = {
+}
+interface FormData {
   fullName: string;
   email: string;
   newPassword: string;
   confirmNewPassword: string;
   [key: string]: string;
-};
+}
 
 const { StyledBox } = StyledComponents;
 
@@ -45,7 +45,7 @@ export default function Register() {
     newPassword: '',
     confirmNewPassword: ''
   });
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<RegisterUserPayload>({
     fullNameError: '',
     newPasswordError: '',
     confirmNewPasswordError: '',
@@ -59,11 +59,10 @@ export default function Register() {
   }, [success, navigate]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>): void {

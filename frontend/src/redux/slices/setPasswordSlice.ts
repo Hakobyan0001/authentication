@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { setPassword } from '../thunks/setPasswordThunk';
 
-type setPasswordState = {
+interface setPasswordState {
   loading: boolean;
   success: boolean;
   error: boolean;
-};
+}
 
 const initialState: setPasswordState = {
   loading: false,
@@ -38,5 +38,4 @@ const setPasswordSlice = createSlice({
   }
 });
 
-// export const {} = setPasswordSlice.actions;
 export default setPasswordSlice.reducer;

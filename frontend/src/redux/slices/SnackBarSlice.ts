@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SnackbarState {
   open: boolean;
@@ -16,7 +16,10 @@ const snackbarSlice = createSlice({
   name: 'snackbar',
   initialState,
   reducers: {
-    setSnackbarMessage(state, action) {
+    setSnackbarMessage(
+      state,
+      action: PayloadAction<{ message: string; severity: SnackbarState['severity'] }>
+    ) {
       state.open = true;
       state.message = action.payload.message;
       state.severity = action.payload.severity;

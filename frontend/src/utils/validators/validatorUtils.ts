@@ -1,3 +1,8 @@
+interface ValidateNewPasswordResult {
+  newPasswordError: string;
+  confirmNewPasswordError: string;
+}
+
 export function validateEmail(email: string): string {
   if (!email) return 'Email address is required';
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -11,7 +16,10 @@ export function validatePassword(password: string): string {
   return '';
 }
 
-export function validateNewPassword(password: string, confirmPassword: string) {
+export function validateNewPassword(
+  password: string,
+  confirmPassword: string
+): ValidateNewPasswordResult {
   let newPasswordError = validatePassword(password);
   let confirmNewPasswordError = validatePassword(confirmPassword);
 

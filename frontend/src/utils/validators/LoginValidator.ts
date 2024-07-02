@@ -1,13 +1,13 @@
 import { validateEmail, validatePassword } from './validatorUtils';
 
-type LoginFormTypes = {
+interface LoginFormTypes {
   password: string;
   email: string;
-};
-type ValidationErrorType = {
+}
+interface ValidationErrorType {
   emailError: string;
   passwordError: string;
-};
+}
 
 function LoginValidator(formData: LoginFormTypes): ValidationErrorType {
   const passwordError = validatePassword(formData.password);

@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { resetPassword } from '../thunks/resetPasswordThunk';
 
-type ResetPasswordState = {
+interface ResetPasswordState {
   loading: boolean;
   success: boolean;
   error: boolean;
-};
+}
 
 const initialState: ResetPasswordState = {
   loading: false,
@@ -40,5 +40,4 @@ const resetPasswordSlice = createSlice({
   }
 });
 
-// export const {} = resetPasswordSlice.actions;
 export default resetPasswordSlice.reducer;

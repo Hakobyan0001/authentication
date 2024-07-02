@@ -1,13 +1,13 @@
 import { validateNewPassword } from './validatorUtils';
 
-type SetFormType = {
+interface SetFormType {
   newPassword: string;
   confirmNewPassword: string;
-};
-type ValidationErrorType = {
+}
+interface ValidationErrorType {
   newPasswordError: string;
   confirmNewPasswordError: string;
-};
+}
 
 function SetValidator(formData: SetFormType): ValidationErrorType {
   const { newPasswordError, confirmNewPasswordError } = validateNewPassword(

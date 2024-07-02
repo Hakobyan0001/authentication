@@ -1,11 +1,11 @@
 import { validateEmail } from './validatorUtils';
 
-type ResetFormType = {
+interface ResetFormType {
   email: string;
-};
-type ValidationErrorType = {
+}
+interface ValidationErrorType {
   emailError: string;
-};
+}
 function ResetValidator(formData: ResetFormType): ValidationErrorType {
   const emailError = validateEmail(formData.email);
   return { emailError };

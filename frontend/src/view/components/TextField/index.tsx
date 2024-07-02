@@ -4,7 +4,7 @@ import { Grid, TextField } from '@mui/material';
 
 import VisibilityIcon from '../VisibilityIcon';
 
-type TextFieldMapperProps = {
+interface TextFieldMapperProps {
   name: string;
   label: string;
   errorName?: string;
@@ -15,7 +15,7 @@ type TextFieldMapperProps = {
   setShowValue?: Dispatch<SetStateAction<boolean>>;
   showValue?: boolean;
   autoFocus?: boolean;
-};
+}
 
 function TextFieldMapper({
   name,

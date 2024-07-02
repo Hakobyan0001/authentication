@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { loginUser } from '../thunks/loginThunk';
 
-type LoginState = {
+interface LoginState {
   loading: boolean;
   success: boolean;
   error: boolean;
-};
+}
 
 const initialState: LoginState = {
   loading: false,
