@@ -58,11 +58,11 @@ export async function register(req: Request, res: Response): Promise<void> {
     });
   }
   try {
-    const validationError = await authService.isInvalidEmail(email);
-    if (validationError) {
+    const emailValidationError = await authService.isInvalidEmail(email);
+    if (emailValidationError) {
       return setStatus(res, true, {
         status: statusCodes.BadRequestError,
-        message: validationError.message,
+        message: emailValidationError.message,
         severity: severities.error
       });
     }

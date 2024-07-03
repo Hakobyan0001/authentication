@@ -21,9 +21,9 @@ export function fromDTO(dto: UserDTO): Partial<User> {
   return assignByProps(dto, props);
 }
 
-type UserDTO = {
+interface UserDTO {
   id?: string;
   email: string;
   fullName: string;
   password?: string;
-};
+}

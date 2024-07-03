@@ -5,13 +5,12 @@ import './utils/cleanupExpiredTokens';
 import router from './routes';
 import {statusCodes} from './config';
 import setStatus from './utils/setStatus';
-// import cookieParser from 'cookie-parser';
+
 const app = express();
 
 // Middlewares
 app.use(cors());
 app.use(urlencoded({ extended: false }));
-// app.use(cookieParser());
 app.use(json());
 
 // Routes

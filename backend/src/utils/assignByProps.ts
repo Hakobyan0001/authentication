@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 
-function assignByProps(obj: any, keys: any) {
+function assignByProps(obj: object, keys: string[]) {
   return pick(obj, keys);
 }
 

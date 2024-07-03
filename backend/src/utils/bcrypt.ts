@@ -1,8 +1,8 @@
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
-type User = {
+interface User {
   password: string;
-};
+}
 
 export default function bcryptHelper() {
   function hashPassword(user: User): string {
