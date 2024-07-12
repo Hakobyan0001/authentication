@@ -13,6 +13,15 @@ class AuthService {
 
     return user;
   }
+  async findUserById(id: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        id
+      }
+    });
+
+    return user;
+  }
   async isInvalidEmail(email: string) {
     if (!isValidEmail(email)) {
       return { message: 'Invalid email' };

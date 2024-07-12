@@ -3,17 +3,22 @@ import { urlencoded, json } from 'body-parser';
 import cors from 'cors';
 import './utils/cleanupExpiredTokens';
 import router from './routes';
-import {statusCodes} from './config';
+import { statusCodes, sessionOptions } from './config';
 import setStatus from './utils/setStatus';
-// import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import initializePassPort from './utils/initializePassport';
+import passport from 'passport';
+
 const app = express();
+initializePassPort(passport);
 
 // Middlewares
 app.use(cors());
 app.use(urlencoded({ extended: false }));
-// app.use(cookieParser());
 app.use(json());
-
+app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
 // Routes
 router(app);
 

@@ -2,18 +2,19 @@ import { Request, Response } from 'express';
 import setStatus from '../utils/setStatus';
 import AuthService from '../services/AuthService';
 import { toDTO } from '../mappers/user';
-import { statusCodes, severities } from '../config';
+import { statusCodes, severities, sessionOptions } from '../config';
 import { PrismaClient } from '@prisma/client';
 import generateToken from '../utils/generateToken';
 import bcryptHelper from '../utils/bcrypt';
 import crypto from 'crypto';
+import { cookieOptions } from '../config/sessionOptions';
 
 const prisma = new PrismaClient();
 const authService = new AuthService();
 const { hashPassword, comparePassword } = bcryptHelper();
 
 export async function login(req: Request, res: Response): Promise<void> {
-  const { email, password } = req.body;
+  const { email, password, isRememberMe } = req.body;
   try {
     const user = await authService.findUser(email);
 
@@ -36,6 +37,13 @@ export async function login(req: Request, res: Response): Promise<void> {
     const userDTO = toDTO(user);
     const token = generateToken(userDTO);
 
+    let maxAge = isRememberMe ? 24 * 60 * 60 * 1000 : 1 * 60 * 60 * 1000;
+
+    res.cookie('login', token, {
+      ...cookieOptions,
+      maxAge: maxAge
+    });
+
     res.json({ token, severity: severities.success, message: 'Login successful' });
   } catch (error) {
     console.error('Login error:', error);
@@ -49,7 +57,7 @@ export async function login(req: Request, res: Response): Promise<void> {
 
 export async function register(req: Request, res: Response): Promise<void> {
   const { email, newPassword: password, fullName } = req.body;
-
+  req.isAuthenticated;
   if (!fullName || !email || !password || password.length < 6) {
     return setStatus(res, true, {
       status: statusCodes.BadRequestError,
@@ -66,7 +74,7 @@ export async function register(req: Request, res: Response): Promise<void> {
         severity: severities.error
       });
     }
-    const hashedPassword = hashPassword({ password });
+    const hashedPassword = await hashPassword({ password });
 
     await prisma.user.create({
       data: {
@@ -146,7 +154,7 @@ export async function setPassword(req: Request, res: Response) {
       });
       return;
     }
-    const hashedPassword = hashPassword({ password });
+    const hashedPassword = await hashPassword({ password });
 
     const isChanged = await authService.changePassword(resetToken.userId, hashedPassword);
 

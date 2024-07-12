@@ -5,12 +5,12 @@ type User = {
 };
 
 export default function bcryptHelper() {
-  function hashPassword(user: User): string {
+  async function hashPassword(user: User): Promise<string> {
     const salt = genSaltSync(10);
     return hashSync(user.password, salt);
   }
 
-  function comparePassword(password: string, hash: string): boolean {
+  async function comparePassword(password: string, hash: string): Promise<boolean> {
     return compareSync(password, hash);
   }
 
