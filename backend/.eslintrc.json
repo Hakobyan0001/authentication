@@ -20,7 +20,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier", "simple-import-sort", "@typescript-eslint"],
+  "plugins": ["prettier", "simple-import-sort", "@typescript-eslint"],
   "rules": {
     "prettier/prettier": ["warn", { "endOfLine": "auto" }],
     "react/react-in-jsx-scope": "off",
@@ -42,7 +42,7 @@
           "warn",
           {
             "groups": [
-              ["^react$", "^next", "^[a-z]"],
+              ["^next", "^[a-z]"],
               ["^@"],
               ["^~"],
               ["^\\.\\.(?!/?$)", "^\\.\\./?$"],

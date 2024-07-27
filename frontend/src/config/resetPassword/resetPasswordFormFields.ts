@@ -1,3 +1,3 @@
-const resetPasswordFormFields = [{ name: 'email', label: 'Email Address' }];
+const resetPasswordFormFields = [{ name: 'email', label: 'Email' }];
 
 export default resetPasswordFormFields;

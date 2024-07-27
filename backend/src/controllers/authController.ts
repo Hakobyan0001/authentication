@@ -1,13 +1,14 @@
-import { Request, Response } from 'express';
-import setStatus from '../utils/setStatus';
-import AuthService from '../services/AuthService';
-import { toDTO } from '../mappers/user';
-import { statusCodes, severities, sessionOptions } from '../config';
-import { PrismaClient } from '@prisma/client';
-import generateToken from '../utils/generateToken';
-import bcryptHelper from '../utils/bcrypt';
 import crypto from 'crypto';
-import { cookieOptions } from '../config/sessionOptions';
+import { Request, Response } from 'express';
+
+import { PrismaClient } from '@prisma/client';
+
+import { cookieOptions, severities, statusCodes } from '../config';
+import { toDTO } from '../mappers/user';
+import AuthService from '../services/AuthService';
+import bcryptHelper from '../utils/bcrypt';
+import generateToken from '../utils/generateToken';
+import setStatus from '../utils/setStatus';
 
 const prisma = new PrismaClient();
 const authService = new AuthService();
@@ -41,9 +42,9 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     res.cookie('login', token, {
       ...cookieOptions,
-      maxAge: maxAge
+      maxAge
     });
-
+    
     res.json({ token, severity: severities.success, message: 'Login successful' });
   } catch (error) {
     console.error('Login error:', error);

@@ -2,7 +2,6 @@ import { jwtDecode } from 'jwt-decode';
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { localStorage, sessionStorage } from '../../services';
 import { loginRequest } from '../../services/REST/Login';
 import { setUserData } from '../slices/authSlice';
 import { setSnackbarMessage } from '../slices/SnackBarSlice';
@@ -33,18 +32,10 @@ export const loginUser = createAsyncThunk<
     const response = await loginRequest(loginData);
     const jwtToken = response.data.token;
     const decoded = jwtDecode(jwtToken) as { email: string; fullName: string };
-
-    if (!loginData.isRememberMe) {
-      sessionStorage.addItem('authToken', jwtToken);
-    } else {
-      localStorage.addItem('authToken', jwtToken);
-    }
-
     dispatch(
       setSnackbarMessage({ message: response.data.message, severity: response.data.severity })
     );
     dispatch(setUserData({ email: decoded.email, fullName: decoded.fullName }));
-
     return response.data;
   } catch (error: any) {
     if (!error.response) {

@@ -1,5 +1,5 @@
 const loginFormFields = [
-  { name: 'email', label: 'Email Address' },
+  { name: 'email', label: 'Email' },
   { name: 'password', label: 'Password' }
 ];
 

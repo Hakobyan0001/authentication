@@ -1,4 +1,5 @@
 import { User } from '@prisma/client';
+
 import assignByProps from '../utils/assignByProps';
 
 /**

@@ -1,16 +1,16 @@
-import { genSaltSync, hashSync, compareSync } from 'bcrypt';
+import { compareSync, genSaltSync, hashSync } from 'bcrypt';
 
 type User = {
   password: string;
 };
 
 export default function bcryptHelper() {
-  async function hashPassword(user: User): Promise<string> {
+  function hashPassword(user: User): string {
     const salt = genSaltSync(10);
     return hashSync(user.password, salt);
   }
 
-  async function comparePassword(password: string, hash: string): Promise<boolean> {
+  function comparePassword(password: string, hash: string): boolean {
     return compareSync(password, hash);
   }
 

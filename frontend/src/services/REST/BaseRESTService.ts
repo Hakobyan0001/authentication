@@ -21,7 +21,8 @@ class BaseRESTService {
       url: `${baseApiUrl}${route}`,
       data: options.data,
       headers,
-      params: options.params
+      params: options.params,
+      withCredentials: true
     };
 
     try {

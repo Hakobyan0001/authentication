@@ -2,7 +2,7 @@ import { jwtDecode } from 'jwt-decode';
 
 import { createSlice } from '@reduxjs/toolkit';
 
-import { localStorage, sessionStorage } from '../../services';
+import { cookieStorage } from '../../services';
 
 interface User {
   email: string;
@@ -12,8 +12,7 @@ interface AuthState {
   user: User | null;
 }
 
-const storedAuthToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-
+const storedAuthToken = cookieStorage.getItem('login');
 const userData = storedAuthToken ? jwtDecode<User>(storedAuthToken) : null;
 
 const initialState: AuthState = {
@@ -29,8 +28,7 @@ const authSlice = createSlice({
     },
     clearUserData(state) {
       state.user = null;
-      localStorage.deleteItem('authToken');
-      sessionStorage.deleteItem('authToken');
+      cookieStorage.deleteItem('login');
     }
   }
 });

@@ -1,25 +1,19 @@
 import { SessionOptions } from 'express-session';
 
-type cookieOptionsType = {
-  path: string;
-  maxAge?: number;
-  secure: boolean;
-  sameSite: boolean | 'none' | 'lax' | 'strict' | undefined;
-  httpOnly: boolean;
-};
+import { PrismaClient } from '@prisma/client';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 
-const cookieOptions: cookieOptionsType = {
-  path: '/',
-  secure: false,
-  sameSite: 'strict',
-  httpOnly: true
-};
+import cookieOptions from './cookieOptions';
 
 const sessionOptions: SessionOptions = {
   secret: (process.env.SESSION_SECRET as string) || 'default_secret',
   resave: false,
   saveUninitialized: false,
-  cookie: cookieOptions
+  cookie: cookieOptions,
+  store: new PrismaSessionStore(new PrismaClient(), {
+    checkPeriod: 2 * 60 * 1000, //ms
+    dbRecordIdIsSessionId: true,
+    dbRecordIdFunction: undefined
+  })
 };
-export { cookieOptions };
 export default sessionOptions;

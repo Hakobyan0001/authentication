@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 import { isValidEmail } from '../utils/validators';
 
 const prisma = new PrismaClient();

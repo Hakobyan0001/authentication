@@ -1,5 +1,6 @@
 import { sign } from 'jsonwebtoken';
-import {auth} from '../config';
+
+import { auth } from '../config';
 
 function generateToken(payload: object) {
   return sign(payload, auth.secret, {

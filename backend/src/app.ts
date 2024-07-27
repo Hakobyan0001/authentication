@@ -1,29 +1,27 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { urlencoded, json } from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
-import './utils/cleanupExpiredTokens';
-import router from './routes';
-import { statusCodes, sessionOptions } from './config';
-import setStatus from './utils/setStatus';
+import express, { Request, Response } from 'express';
 import session from 'express-session';
-import initializePassPort from './utils/initializePassport';
-import passport from 'passport';
+
+import setStatus from './utils/setStatus';
+import { sessionOptions, statusCodes } from './config';
+import router from './routes';
+
+import './utils/cleanupExpiredTokens';
 
 const app = express();
-initializePassPort(passport);
 
 // Middlewares
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(urlencoded({ extended: false }));
 app.use(json());
 app.use(session(sessionOptions));
-app.use(passport.initialize());
-app.use(passport.session());
+
 // Routes
 router(app);
 
 // Error handler middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response) => {
   if (err.code === 'permission_denied') {
     setStatus(res, true, {
       status: statusCodes.UnauthorizedError,
