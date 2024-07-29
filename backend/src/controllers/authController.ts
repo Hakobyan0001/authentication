@@ -44,7 +44,7 @@ export async function login(req: Request, res: Response): Promise<void> {
       ...cookieOptions,
       maxAge
     });
-    
+
     res.json({ token, severity: severities.success, message: 'Login successful' });
   } catch (error) {
     console.error('Login error:', error);

@@ -8,7 +8,7 @@ type cookieOptionsType = {
 const cookieOptions: cookieOptionsType = {
   path: '/',
   secure: false,
-  httpOnly: true
+  httpOnly: false
 };
 
 export default cookieOptions;

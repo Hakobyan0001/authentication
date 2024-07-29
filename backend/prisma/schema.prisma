@@ -31,10 +31,3 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
   expiresAt DateTime
 }
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt   DateTime
-}

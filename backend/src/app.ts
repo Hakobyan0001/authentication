@@ -1,10 +1,10 @@
 import { json, urlencoded } from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
-import session from 'express-session';
 
 import setStatus from './utils/setStatus';
-import { sessionOptions, statusCodes } from './config';
+import { statusCodes } from './config';
 import router from './routes';
 
 import './utils/cleanupExpiredTokens';
@@ -15,8 +15,7 @@ const app = express();
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(urlencoded({ extended: false }));
 app.use(json());
-app.use(session(sessionOptions));
-
+app.use(cookieParser());
 // Routes
 router(app);
 
